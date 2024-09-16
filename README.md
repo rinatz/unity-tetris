@@ -4,4 +4,4 @@
 
 ## 著作権について
 
-- 音楽：魔王魂（https://maou.audio/）
+- 音楽：[魔王魂](https://maou.audio/)
