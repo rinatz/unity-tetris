@@ -2,11 +2,19 @@ using UnityEngine;
 
 public class Tetromino : MonoBehaviour
 {
+    enum Status
+    {
+        Falling,            // 落下中
+        Landing,            // 着地前
+        PlacementLockdown,  // 着地前の遊びの時間
+        Lockdown,           // 固定状態
+    }
+
     public float defaultFallTime = 1.0f;
     private float fallTime;
     private float previousTime;
     private float accelerate = 20.0f;
-    private bool lockdown = false;
+    private Status status = Status.Falling;
     private TetriminoManager manager;
 
     void Start()
@@ -18,7 +26,7 @@ public class Tetromino : MonoBehaviour
 
     void Update()
     {
-        if (lockdown)
+        if (status == Status.Lockdown)
         {
             return;
         }
@@ -31,8 +39,9 @@ public class Tetromino : MonoBehaviour
 
         HandleInput();
 
-        if (lockdown)
+        if (status == Status.Landing)
         {
+            status = Status.Lockdown;
             manager.OnTetrominoDropped(this);
         }
     }
@@ -44,17 +53,18 @@ public class Tetromino : MonoBehaviour
         if (CheckCollision())
         {
             transform.position += Vector3.up;
-            lockdown = true;
+            status = Status.Landing;
         }
-    }
-
-    bool HardDropMode()
-    {
-        return Input.GetKeyDown(KeyCode.Space);
     }
 
     void HandleInput()
     {
+        // 着地前のキー入力は遊びの時間を設ける
+        if (status == Status.Landing)
+        {
+            status = Status.PlacementLockdown;
+        }
+
         // 左移動（左ボタン）
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
@@ -106,6 +116,14 @@ public class Tetromino : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             fallTime = 0.0001f;
+        }
+        else
+        {
+            // 遊びの時間にキー入力がなければ着地前に戻す
+            if (status == Status.PlacementLockdown)
+            {
+                status = Status.Landing;
+            }
         }
     }
 
