@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01432a0c00e358c4eb3e3c9cba79cd1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tetriminoList:
+  tetrominoList:
   - {fileID: 8654692720435502289, guid: 120e3dcb0cd9c104e982d64cc91bb257, type: 3}
   - {fileID: 5130085964668275160, guid: ea2aae1abfde5f24a8f1a032641345e4, type: 3}
   - {fileID: 8328215675115359535, guid: 51384ed892535a846b4f9163ac706a59, type: 3}

@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class TetriminoManager : MonoBehaviour
 {
-    public GameObject[] tetriminoList;
+    public GameObject[] tetrominoList;
+    private int currentIndex = 0;
     private const int Width = 10;
     private const int Height = 20;
     private Transform[,] grid = new Transform[Width, Height];
@@ -15,8 +16,31 @@ public class TetriminoManager : MonoBehaviour
 
     public GameObject SpawnTetromino()
     {
-        var index = Random.Range(0, tetriminoList.Length);
-        return Instantiate(tetriminoList[index], transform.position, Quaternion.identity);
+        if (currentIndex == 0)
+        {
+            ShuffleTetrominoList();
+        }
+
+        var gameObject = Instantiate(tetrominoList[currentIndex++], transform.position, Quaternion.identity);
+
+        if (currentIndex >= tetrominoList.Length)
+        {
+            currentIndex = 0;
+        }
+
+        return gameObject;
+    }
+
+    public void ShuffleTetrominoList()
+    {
+        for (int i = tetrominoList.Length - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+
+            var temp = tetrominoList[i];
+            tetrominoList[i] = tetrominoList[j];
+            tetrominoList[j] = temp;
+        }
     }
 
     public bool CheckCollision(Tetromino tetromino)
@@ -94,19 +118,20 @@ public class TetriminoManager : MonoBehaviour
 
         for (int y = Height - 1; y >= 0; y--)
         {
-            if (!CheckFullLines(y))
+            if (!CompletedLine(y))
             {
                 continue;
             }
 
-            ClearLines(y);
-            FallTetriminos(y);
+            ClearLine(y);
+            FallOneRankAbove(y);
         }
 
         return true;
     }
 
-    bool CheckFullLines(int y)
+    // y行はブロックで埋め尽くされたかどうかを調べる
+    bool CompletedLine(int y)
     {
         for (int x = 0; x < Width; x++)
         {
@@ -121,7 +146,7 @@ public class TetriminoManager : MonoBehaviour
         return true;
     }
 
-    void ClearLines(int y)
+    void ClearLine(int y)
     {
         for (int x = 0; x < Width; x++)
         {
@@ -132,9 +157,10 @@ public class TetriminoManager : MonoBehaviour
         }
     }
 
-    public void FallTetriminos(int yMin)
+    // yMin より上のブロックを下に移動させる
+    public void FallOneRankAbove(int yMin)
     {
-        for (int y = yMin; y < Height; y++)
+        for (int y = yMin + 1; y < Height; y++)
         {
             for (int x = 0; x < Width; x++)
             {
