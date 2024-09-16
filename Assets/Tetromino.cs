@@ -2,60 +2,55 @@ using UnityEngine;
 
 public class Tetromino : MonoBehaviour
 {
-    public float dropSpeed = 1.0f;
-    public float accelerationFactor = 30.0f;
-    private float lapTime;
-    private bool dropped = false;
+    public float defaultFallTime = 1.0f;
+    private float fallTime;
+    private float previousTime;
+    private float accelerate = 20.0f;
+    private bool lockdown = false;
     private TetriminoManager manager;
 
     void Start()
     {
         manager = FindObjectOfType<TetriminoManager>();
-        lapTime = NextLapTime();
+        fallTime = defaultFallTime;
+        previousTime = Time.time;
     }
 
     void Update()
     {
-        if (dropped)
+        if (lockdown)
         {
             return;
         }
 
-        if (Time.time >= lapTime)
+        if (Time.time - previousTime >= fallTime)
         {
-            Drop();
-            lapTime = NextLapTime();
+            Fall();
+            previousTime = Time.time;
         }
 
         HandleInput();
+
+        if (lockdown)
+        {
+            manager.OnTetrominoDropped(this);
+        }
     }
 
-    void Drop()
+    void Fall()
     {
         transform.position += Vector3.down;
 
         if (CheckCollision())
         {
             transform.position += Vector3.up;
-
-            dropped = true;
-            manager.OnTetrominoDropped(this);
+            lockdown = true;
         }
     }
 
-    bool IsFastDropMode()
+    bool HardDropMode()
     {
-        return Input.GetKey(KeyCode.DownArrow);
-    }
-
-    float NextLapTime()
-    {
-        if (IsFastDropMode())
-        {
-            return Time.time + dropSpeed / accelerationFactor;
-        }
-
-        return Time.time + dropSpeed;
+        return Input.GetKeyDown(KeyCode.Space);
     }
 
     void HandleInput()
@@ -92,10 +87,25 @@ public class Tetromino : MonoBehaviour
                 transform.Rotate(Vector3.forward, -angle);
             }
         }
-        // 下移動（下ボタン）
+        // ソフトドロップ
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Drop();
+            Fall();
+        }
+        // ソフトドロップ（高速）
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            fallTime = defaultFallTime / accelerate;
+        }
+        // ソフトドロップ（高速）の解除
+        else if (Input.GetKeyUp(KeyCode.DownArrow))
+        {
+            fallTime = defaultFallTime;
+        }
+        // ハードドロップ
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            fallTime = 0.0001f;
         }
     }
 
