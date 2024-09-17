@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Tetromino : MonoBehaviour
 {
-    enum Status
+    public enum Status
     {
         Falling,            // 落下中
         Landing,            // 着地前
@@ -13,7 +13,7 @@ public class Tetromino : MonoBehaviour
     private float fallTime;
     private float previousTime;
     private float accelerate = 20.0f;
-    private Status status = Status.Falling;
+    public Status status = Status.Falling;
     private TetriminoManager manager;
 
     void Start()

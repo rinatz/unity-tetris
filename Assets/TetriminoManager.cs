@@ -1,45 +1,101 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TetriminoManager : MonoBehaviour
 {
-    public GameObject[] tetrominoList;
-    private int currentIndex = 0;
+    // テトリミノのプレハブを保存するリスト
+    public List<GameObject> tetrominoList = new List<GameObject>();
+
+    // シャッフルしたテトリミノのリスト
+    private List<GameObject> currentTetrominoList = new List<GameObject>();
+
+    // 次のテトリミノを保存するキュー
+    private Queue<GameObject> nextTetrominoQueue = new Queue<GameObject>();
+
+    // 表示用のスロット
+    public List<Transform> nextTetrominoSlots;
+
     private const int Width = 10;
     private const int Height = 20;
     private Transform[,] grid = new Transform[Width, Height];
 
     void Start()
     {
+        if (tetrominoList.Count == 0)
+        {
+            Debug.LogError("テトリミノのプレハブが設定されていません");
+            return;
+        }
+
+        ShuffleCurrentTetrominoList();
+        EnqueueNextTetrominoes();
+
         Debug.LogWarning("最初のミノを生成");
+
         SpawnTetromino();
     }
 
-    public GameObject SpawnTetromino()
+    public void SpawnTetromino()
     {
-        if (currentIndex == 0)
-        {
-            ShuffleTetrominoList();
-        }
+        var nextTetromino = nextTetrominoQueue.Dequeue();
+        Instantiate(nextTetromino, transform.position, Quaternion.identity);
 
-        var gameObject = Instantiate(tetrominoList[currentIndex++], transform.position, Quaternion.identity);
-
-        if (currentIndex >= tetrominoList.Length)
-        {
-            currentIndex = 0;
-        }
-
-        return gameObject;
+        EnqueueNextTetrominoes();
+        UpdateNextTetrominoDisplay();
     }
 
-    public void ShuffleTetrominoList()
+    void ShuffleCurrentTetrominoList()
     {
-        for (int i = tetrominoList.Length - 1; i > 0; i--)
-        {
-            int j = Random.Range(0, i + 1);
+        currentTetrominoList = new List<GameObject>(tetrominoList);
 
-            var temp = tetrominoList[i];
-            tetrominoList[i] = tetrominoList[j];
-            tetrominoList[j] = temp;
+        for (int i = 0; i < currentTetrominoList.Count; i++)
+        {
+            int randomIndex = Random.Range(i, currentTetrominoList.Count);
+
+            var temp = currentTetrominoList[i];
+            currentTetrominoList[i] = currentTetrominoList[randomIndex];
+            currentTetrominoList[randomIndex] = temp;
+        }
+    }
+
+    void EnqueueNextTetrominoes()
+    {
+        // NEXTスロットに表示できる数だけキューに入れる
+        while (nextTetrominoQueue.Count < nextTetrominoSlots.Count)
+        {
+            // リストが空なら再度シャッフル
+            if (currentTetrominoList.Count == 0)
+            {
+                ShuffleCurrentTetrominoList();
+            }
+
+            nextTetrominoQueue.Enqueue(currentTetrominoList[0]);
+            currentTetrominoList.RemoveAt(0);
+        }
+    }
+
+    private void UpdateNextTetrominoDisplay()
+    {
+        // すでに表示されている次のミノを消す
+        foreach (Transform slot in nextTetrominoSlots)
+        {
+            foreach (Transform child in slot)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        // 次のミノを表示
+        var nextTetrominoArray = nextTetrominoQueue.ToArray();
+
+        for (int i = 0; i < nextTetrominoSlots.Count; i++)
+        {
+            if (i < nextTetrominoArray.Length)
+            {
+                var gameObject = Instantiate(nextTetrominoArray[i], nextTetrominoSlots[i]);
+                gameObject.transform.localScale = Vector3.one;
+                gameObject.transform.localPosition = Vector3.zero;
+            }
         }
     }
 
