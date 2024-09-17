@@ -6,7 +6,6 @@ public class Tetromino : MonoBehaviour
     {
         Falling,            // 落下中
         Landing,            // 着地前
-        PlacementLockdown,  // 着地前の遊びの時間
         Lockdown,           // 固定状態
     }
 
@@ -26,11 +25,13 @@ public class Tetromino : MonoBehaviour
 
     void Update()
     {
+        // ロックダウンしたら何もしない
         if (status == Status.Lockdown)
         {
             return;
         }
 
+        // 落下させる（着地するとstatusがロックダウンになる）
         if (Time.time - previousTime >= fallTime)
         {
             Fall();
@@ -39,10 +40,11 @@ public class Tetromino : MonoBehaviour
 
         HandleInput();
 
+        // 着地したらロックダウンして終了処理をする
         if (status == Status.Landing)
         {
             status = Status.Lockdown;
-            manager.OnTetrominoDropped(this);
+            manager.OnTetrominoLockdown(this);
         }
     }
 
@@ -59,12 +61,6 @@ public class Tetromino : MonoBehaviour
 
     void HandleInput()
     {
-        // 着地前のキー入力は遊びの時間を設ける
-        if (status == Status.Landing)
-        {
-            status = Status.PlacementLockdown;
-        }
-
         // 左移動（左ボタン）
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
@@ -116,14 +112,6 @@ public class Tetromino : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             fallTime = 0.0001f;
-        }
-        else
-        {
-            // 遊びの時間にキー入力がなければ着地前に戻す
-            if (status == Status.PlacementLockdown)
-            {
-                status = Status.Landing;
-            }
         }
     }
 

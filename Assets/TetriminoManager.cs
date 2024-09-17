@@ -83,7 +83,7 @@ public class TetriminoManager : MonoBehaviour
         return false;
     }
 
-    public void OnTetrominoDropped(Tetromino tetromino)
+    public void OnTetrominoLockdown(Tetromino tetromino)
     {
         if (!TryUpdateGrid(tetromino))
         {
@@ -91,7 +91,8 @@ public class TetriminoManager : MonoBehaviour
             return;
         }
 
-        Debug.LogWarning($"{tetromino.gameObject.name}が終了、次のミノを生成");
+        Debug.LogWarning($"{tetromino.gameObject.name}がロックダウン、次のミノを生成");
+
         SpawnTetromino();
     }
 
