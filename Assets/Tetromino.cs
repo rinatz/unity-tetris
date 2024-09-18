@@ -39,10 +39,10 @@ public class Tetromino : MonoBehaviour
         Fall();
         HandleInput();
 
-        // 無効化されたら終了
+        // 着地したら終了
         if (!enabled)
         {
-            manager.OnTetrominoLockdown(this);
+            manager.OnLockdown(this);
         }
     }
 

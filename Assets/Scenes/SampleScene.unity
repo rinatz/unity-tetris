@@ -1183,6 +1183,7 @@ GameObject:
   - component: {fileID: 3106740087286619324}
   - component: {fileID: 5407040560169431870}
   - component: {fileID: 1922396028}
+  - component: {fileID: 5407040560169431871}
   m_Layer: 0
   m_Name: Stage
   m_TagString: Untagged
@@ -1242,6 +1243,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5407040560169431871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4634839426662596125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 231d145cc2661b142a9fdd653e4ac0df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 10
+  height: 20
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

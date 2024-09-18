@@ -17,9 +17,7 @@ public class TetriminoManager : MonoBehaviour
     // 表示用のスロット
     public List<Transform> nextTetrominoSlots;
 
-    private const int Width = 10;
-    private const int Height = 20;
-    private Transform[,] grid = new Transform[Width, Height];
+    private Grid grid;
 
     void Start()
     {
@@ -28,6 +26,8 @@ public class TetriminoManager : MonoBehaviour
             Debug.LogError("テトリミノのプレハブが設定されていません");
             return;
         }
+
+        grid = FindObjectOfType<Grid>();
 
         ShuffleCurrentTetrominoList();
         EnqueueNextTetrominoes();
@@ -106,47 +106,12 @@ public class TetriminoManager : MonoBehaviour
 
     public bool CheckCollision(Tetromino tetromino)
     {
-        foreach (Transform child in tetromino.transform)
-        {
-            var x = Mathf.RoundToInt(child.transform.position.x);
-            var y = Mathf.RoundToInt(child.transform.position.y);
-
-            Debug.Log($"(x, y): ({x}, {y})");
-
-            if (x < 0)
-            {
-                Debug.Log($"{child.name}が左に接触: ({x}, {y})");
-                return true;
-            }
-
-            if (x >= Width)
-            {
-                Debug.Log($"{child.name}が右に接触: ({x}, {y})");
-                return true;
-            }
-
-            if (y < 0)
-            {
-                Debug.Log($"{child.name}が地面に接触: ({x}, {y})");
-                return true;
-            }
-
-            if (x < Width && y < Height)
-            {
-                if (HasTetromino(x, y))
-                {
-                    Debug.Log($"{child.name}が他のミノに接触: ({x}, {y})");
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return grid.CheckCollision(tetromino);
     }
 
-    public void OnTetrominoLockdown(Tetromino tetromino)
+    public void OnLockdown(Tetromino tetromino)
     {
-        if (!TryUpdateGrid(tetromino))
+        if (!grid.TryAdd(tetromino))
         {
             Debug.LogWarning("ゲームオーバー");
             return;
@@ -155,87 +120,5 @@ public class TetriminoManager : MonoBehaviour
         Debug.LogWarning($"{tetromino.gameObject.name}がロックダウン、次のミノを生成");
 
         SpawnTetromino();
-    }
-
-    bool HasTetromino(int x, int y)
-    {
-        return grid[x, y] != null;
-    }
-
-    bool TryUpdateGrid(Tetromino tetromino)
-    {
-        foreach (Transform child in tetromino.transform)
-        {
-            var x = Mathf.RoundToInt(child.transform.position.x);
-            var y = Mathf.RoundToInt(child.transform.position.y);
-
-            if (y >= Height)
-            {
-                Debug.LogWarning("ミノが積み上がりました");
-                return false;
-            }
-
-            grid[x, y] = child;
-        }
-
-        for (int y = Height - 1; y >= 0; y--)
-        {
-            if (!CompletedLine(y))
-            {
-                continue;
-            }
-
-            ClearLine(y);
-            FallOneRankAbove(y);
-        }
-
-        return true;
-    }
-
-    // y行はブロックで埋め尽くされたかどうかを調べる
-    bool CompletedLine(int y)
-    {
-        for (int x = 0; x < Width; x++)
-        {
-            if (!HasTetromino(x, y))
-            {
-                return false;
-            }
-        }
-
-        Debug.Log($"{y}行目が削除可能");
-
-        return true;
-    }
-
-    void ClearLine(int y)
-    {
-        for (int x = 0; x < Width; x++)
-        {
-            Debug.Log($"({x}, {y})を削除");
-
-            Destroy(grid[x, y].gameObject);
-            grid[x, y] = null;
-        }
-    }
-
-    // yMin より上のブロックを下に移動させる
-    public void FallOneRankAbove(int yMin)
-    {
-        for (int y = yMin + 1; y < Height; y++)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                if (!HasTetromino(x, y))
-                {
-                    continue;
-                }
-
-                grid[x, y - 1] = grid[x, y];
-                grid[x, y - 1].transform.position += Vector3.down;
-
-                grid[x, y] = null;
-            }
-        }
     }
 }
