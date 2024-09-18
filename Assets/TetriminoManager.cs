@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class TetriminoManager : MonoBehaviour
 {
+    public Vector3 spawnPosition;
+
     // テトリミノのプレハブを保存するリスト
     public List<GameObject> tetrominoList = new List<GameObject>();
 
@@ -38,7 +40,7 @@ public class TetriminoManager : MonoBehaviour
     public void SpawnTetromino()
     {
         var nextTetromino = nextTetrominoQueue.Dequeue();
-        Instantiate(nextTetromino, transform.position, Quaternion.identity);
+        Instantiate(nextTetromino, spawnPosition, Quaternion.identity);
 
         EnqueueNextTetrominoes();
         UpdateNextTetrominoDisplay();
@@ -93,8 +95,11 @@ public class TetriminoManager : MonoBehaviour
             if (i < nextTetrominoArray.Length)
             {
                 var gameObject = Instantiate(nextTetrominoArray[i], nextTetrominoSlots[i]);
-                gameObject.transform.localScale = Vector3.one;
-                gameObject.transform.localPosition = Vector3.zero;
+
+                gameObject.transform.localScale = Vector3.one * 0.5f;
+
+                // 動かさないで表示させておく
+                gameObject.GetComponent<Tetromino>().enabled = false;
             }
         }
     }
@@ -126,7 +131,7 @@ public class TetriminoManager : MonoBehaviour
                 return true;
             }
 
-            if (x < grid.GetLength(0) && y < grid.GetLength(1))
+            if (x < Width && y < Height)
             {
                 if (HasTetromino(x, y))
                 {

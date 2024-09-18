@@ -2,60 +2,66 @@ using UnityEngine;
 
 public class Tetromino : MonoBehaviour
 {
-    public enum Status
-    {
-        Falling,            // 落下中
-        Landing,            // 着地前
-        Lockdown,           // 固定状態
-    }
-
+    // 落下間隔（デフォルト）
     public float defaultFallTime = 1.0f;
+
+    // ソフトドロップの加速倍率
+    public float accelerate = 20.0f;
+
+    // ハードドロップの間隔
+    public float hardDropTime = 0.0001f;
+
+    // 落下間隔
     private float fallTime;
+
+    // 前回落下した時間
     private float previousTime;
-    private float accelerate = 20.0f;
-    public Status status = Status.Falling;
+
+    // テトリミノの管理クラス
     private TetriminoManager manager;
 
     void Start()
     {
-        manager = FindObjectOfType<TetriminoManager>();
         fallTime = defaultFallTime;
         previousTime = Time.time;
+        manager = FindObjectOfType<TetriminoManager>();
     }
 
     void Update()
     {
-        // ロックダウンしたら何もしない
-        if (status == Status.Lockdown)
+        // 操作が無効の場合は何もしない
+        if (!enabled)
         {
             return;
         }
 
-        // 落下させる（着地するとstatusがロックダウンになる）
-        if (Time.time - previousTime >= fallTime)
-        {
-            Fall();
-            previousTime = Time.time;
-        }
-
+        // 着地したら enabled フラグが落ちる
+        Fall();
         HandleInput();
 
-        // 着地したらロックダウンして終了処理をする
-        if (status == Status.Landing)
+        // 無効化されたら終了
+        if (!enabled)
         {
-            status = Status.Lockdown;
             manager.OnTetrominoLockdown(this);
         }
     }
 
     void Fall()
     {
+        // fallTime 以上経過するまで待機する
+        if (Time.time - previousTime < fallTime)
+        {
+            return;
+        }
+
+        previousTime = Time.time;
         transform.position += Vector3.down;
 
+        // 範囲外に行ったら1マス戻して無効化する（着地）
         if (CheckCollision())
         {
             transform.position += Vector3.up;
-            status = Status.Landing;
+            enabled = false;
         }
     }
 
@@ -111,7 +117,7 @@ public class Tetromino : MonoBehaviour
         // ハードドロップ
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            fallTime = 0.0001f;
+            fallTime = hardDropTime;
         }
     }
 
