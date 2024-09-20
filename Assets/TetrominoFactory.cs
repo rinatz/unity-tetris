@@ -10,14 +10,11 @@ public class TetrominoFactory : MonoBehaviour
     // テトリミノのプレハブを保存するリスト
     public List<GameObject> tetrominoList = new List<GameObject>();
 
-    // シャッフルしたテトリミノのリスト
-    private List<GameObject> currentTetrominoList = new List<GameObject>();
-
-    // 次のテトリミノを保存するキュー
-    private Queue<GameObject> nextTetrominoQueue = new Queue<GameObject>();
+    // テトリミノを取り出し順に格納したキュー
+    private Queue<GameObject> tetrominoQueue = new Queue<GameObject>();
 
     // 表示用のスロット
-    public List<Transform> nextTetrominoSlots;
+    public List<Transform> nextSlots;
 
     void Awake()
     {
@@ -27,62 +24,70 @@ public class TetrominoFactory : MonoBehaviour
             return;
         }
 
-        if (nextTetrominoSlots.Count == 0)
+        if (nextSlots.Count == 0)
         {
             Debug.LogError("次のテトリミノを表示するスロットが設定されていません");
             return;
         }
 
-        ShuffleCurrentTetrominoList();
-        EnqueueNextTetrominoList();
+        Enqueue(Shuffle(tetrominoList));
     }
 
     public GameObject Spawn()
     {
-        var nextTetromino = nextTetrominoQueue.Dequeue();
-        var gameObject = Instantiate(nextTetromino, spawnPosition, Quaternion.identity);
-        gameObject.GetComponent<Tetromino>().Falling();
+        // 次のテトリミノを取り出す
+        var gameObject = Dequeue();
 
-        EnqueueNextTetrominoList();
-        UpdateNextTetrominoDisplay();
+        // 表示用のテトリミノがスロット数に満たない場合はテトリミノをキューに追加
+        if (tetrominoQueue.Count < nextSlots.Count)
+        {
+            Enqueue(Shuffle(tetrominoList));
+        }
+
+        // 次のテトリミノを表示
+        DisplayNext();
 
         return gameObject;
     }
 
-    void ShuffleCurrentTetrominoList()
+    static List<GameObject> Shuffle(List<GameObject> items)
     {
-        currentTetrominoList = new List<GameObject>(tetrominoList);
+        var shuffled = new List<GameObject>(items);
 
-        for (int i = 0; i < currentTetrominoList.Count; i++)
+        for (int i = 0; i < shuffled.Count; i++)
         {
-            int randomIndex = Random.Range(i, currentTetrominoList.Count);
+            int randomIndex = Random.Range(i, shuffled.Count);
 
-            var temp = currentTetrominoList[i];
-            currentTetrominoList[i] = currentTetrominoList[randomIndex];
-            currentTetrominoList[randomIndex] = temp;
+            var temp = shuffled[i];
+            shuffled[i] = shuffled[randomIndex];
+            shuffled[randomIndex] = temp;
+        }
+
+        return shuffled;
+    }
+
+    void Enqueue(List<GameObject> items)
+    {
+        foreach (var item in items)
+        {
+            tetrominoQueue.Enqueue(item);
         }
     }
 
-    void EnqueueNextTetrominoList()
+    GameObject Dequeue()
     {
-        // NEXTスロットに表示できる数だけキューに入れる
-        while (nextTetrominoQueue.Count < nextTetrominoSlots.Count)
-        {
-            // リストが空なら再度シャッフル
-            if (currentTetrominoList.Count == 0)
-            {
-                ShuffleCurrentTetrominoList();
-            }
+        var next = tetrominoQueue.Dequeue();
 
-            nextTetrominoQueue.Enqueue(currentTetrominoList[0]);
-            currentTetrominoList.RemoveAt(0);
-        }
+        var gameObject = Instantiate(next, spawnPosition, Quaternion.identity);
+        gameObject.GetComponent<Tetromino>().Falling();
+
+        return next;
     }
 
-    void UpdateNextTetrominoDisplay()
+    void DisplayNext()
     {
         // すでに表示されている次のミノを消す
-        foreach (Transform slot in nextTetrominoSlots)
+        foreach (Transform slot in nextSlots)
         {
             foreach (Transform child in slot)
             {
@@ -91,16 +96,12 @@ public class TetrominoFactory : MonoBehaviour
         }
 
         // 次のミノを表示
-        var nextTetrominoArray = nextTetrominoQueue.ToArray();
+        var nextTetrominoArray = tetrominoQueue.ToArray();
 
-        for (int i = 0; i < nextTetrominoSlots.Count; i++)
+        for (int i = 0; i < nextSlots.Count; i++)
         {
-            if (i < nextTetrominoArray.Length)
-            {
-                var gameObject = Instantiate(nextTetrominoArray[i], nextTetrominoSlots[i]);
-
-                gameObject.transform.localScale = Vector3.one * 0.5f;
-            }
+            var gameObject = Instantiate(nextTetrominoArray[i], nextSlots[i]);
+            gameObject.transform.localScale = Vector3.one * 0.5f;
         }
     }
 }

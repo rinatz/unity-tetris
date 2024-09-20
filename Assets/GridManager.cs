@@ -149,25 +149,15 @@ public class GridManager : MonoBehaviour
     {
         for (int x = 0; x < width; x++)
         {
-            var renderer = grid[x, y].gameObject.GetComponent<Renderer>();
-
-            var color = Color.gray;
-            color.a = 0f;
-
-            renderer.material.color = color;
-        }
-
-        GetComponent<AudioSource>().Play();
-
-        yield return new WaitForSeconds(0.2f);
-
-        for (int x = 0; x < width; x++)
-        {
             Debug.Log($"({x}, {y})を削除");
 
             Destroy(grid[x, y].gameObject);
             grid[x, y] = null;
         }
+
+        GetComponent<AudioSource>().Play();
+
+        yield return new WaitForSeconds(0.2f);
 
         FallOneRankAbove(y);
     }
