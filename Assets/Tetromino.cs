@@ -30,6 +30,10 @@ public class Tetromino : MonoBehaviour
     public GameObject ghostBlock;
     private GameObject ghostBlockObject;
 
+    public AudioClip moveSound;
+    public AudioClip rotationSound;
+    public AudioClip lockdownSound;
+
     void Start()
     {
         fallTime = defaultFallTime;
@@ -55,6 +59,7 @@ public class Tetromino : MonoBehaviour
         if (status == Status.Landing)
         {
             status = Status.Lockdown;
+            GetComponent<AudioSource>().PlayOneShot(lockdownSound);
             Destroy(ghostBlockObject);
             FindObjectOfType<TetrominoManager>().Lockdown(this);
         }
@@ -97,6 +102,10 @@ public class Tetromino : MonoBehaviour
             {
                 transform.position += Vector3.right;
             }
+            else
+            {
+                GetComponent<AudioSource>().PlayOneShot(moveSound);
+            }
         }
         // 右移動（右ボタン）
         else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -106,6 +115,10 @@ public class Tetromino : MonoBehaviour
             if (CheckCollision())
             {
                 transform.position += Vector3.left;
+            }
+            else
+            {
+                GetComponent<AudioSource>().PlayOneShot(moveSound);
             }
         }
         // 回転（上ボタン）
@@ -118,6 +131,10 @@ public class Tetromino : MonoBehaviour
             if (CheckCollision())
             {
                 transform.Rotate(Vector3.forward, -angle);
+            }
+            else
+            {
+                GetComponent<AudioSource>().PlayOneShot(rotationSound);
             }
         }
         // ソフトドロップ

@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -21,8 +23,6 @@ public class GridManager : MonoBehaviour
         {
             var x = Mathf.RoundToInt(child.transform.position.x);
             var y = Mathf.RoundToInt(child.transform.position.y);
-
-            Debug.Log($"(x, y): ({x}, {y})");
 
             if (x < 0)
             {
@@ -57,23 +57,18 @@ public class GridManager : MonoBehaviour
 
     public bool CheckCollision(int x, int y)
     {
-        Debug.Log($"(x, y): ({x}, {y})");
-
         if (x < 0)
         {
-            Debug.Log($"左に接触: ({x}, {y})");
             return true;
         }
 
         if (x >= width)
         {
-            Debug.Log($"右に接触: ({x}, {y})");
             return true;
         }
 
         if (y < 0)
         {
-            Debug.Log($"地面に接触: ({x}, {y})");
             return true;
         }
 
@@ -81,7 +76,6 @@ public class GridManager : MonoBehaviour
         {
             if (Filled(x, y))
             {
-                Debug.Log($"他のミノに接触: ({x}, {y})");
                 return true;
             }
         }
@@ -148,6 +142,25 @@ public class GridManager : MonoBehaviour
     // y 行目を削除する
     void ClearLine(int y)
     {
+        StartCoroutine(ClearLineCoroutine(y));
+    }
+
+    IEnumerator ClearLineCoroutine(int y)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            var renderer = grid[x, y].gameObject.GetComponent<Renderer>();
+
+            var color = Color.gray;
+            color.a = 0f;
+
+            renderer.material.color = color;
+        }
+
+        GetComponent<AudioSource>().Play();
+
+        yield return new WaitForSeconds(0.2f);
+
         for (int x = 0; x < width; x++)
         {
             Debug.Log($"({x}, {y})を削除");
