@@ -48,8 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19b8d79352e51ba41947c59fabf529a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropSpeed: 1
-  accelerationFactor: 30
+  defaultFallTime: 1
+  accelerate: 20
+  hardDropTime: 0.0001
+  ghostBlock: {fileID: 2630339895448262190, guid: 373012d53dcb5374fae821bd7afbfb35, type: 3}
 --- !u!1001 &460904807500626636
 PrefabInstance:
   m_ObjectHideFlags: 0

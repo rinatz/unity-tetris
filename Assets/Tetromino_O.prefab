@@ -49,7 +49,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultFallTime: 1
-  status: 0
+  accelerate: 20
+  hardDropTime: 0.0001
+  ghostBlock: {fileID: 2746473135248804462, guid: a97abf3cdab39614b823b1cc1732dc6e, type: 3}
 --- !u!1001 &798040905954787176
 PrefabInstance:
   m_ObjectHideFlags: 0

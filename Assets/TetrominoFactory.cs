@@ -34,7 +34,7 @@ public class TetrominoFactory : MonoBehaviour
         }
 
         ShuffleCurrentTetrominoList();
-        EnqueueNextTetrominoes();
+        EnqueueNextTetrominoList();
     }
 
     public GameObject Spawn()
@@ -43,7 +43,7 @@ public class TetrominoFactory : MonoBehaviour
         var gameObject = Instantiate(nextTetromino, spawnPosition, Quaternion.identity);
         gameObject.GetComponent<Tetromino>().Falling();
 
-        EnqueueNextTetrominoes();
+        EnqueueNextTetrominoList();
         UpdateNextTetrominoDisplay();
 
         return gameObject;
@@ -63,7 +63,7 @@ public class TetrominoFactory : MonoBehaviour
         }
     }
 
-    void EnqueueNextTetrominoes()
+    void EnqueueNextTetrominoList()
     {
         // NEXTスロットに表示できる数だけキューに入れる
         while (nextTetrominoQueue.Count < nextTetrominoSlots.Count)

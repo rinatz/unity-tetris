@@ -25,16 +25,15 @@ public class Tetromino : MonoBehaviour
     // 前回落下した時間
     private float previousTime;
 
-    // テトリミノの管理クラス
-    private TetrominoManager manager;
-
     private Status status = Status.Standby;
+
+    public GameObject ghostBlock;
+    private GameObject ghostBlockObject;
 
     void Start()
     {
         fallTime = defaultFallTime;
         previousTime = Time.time;
-        manager = FindObjectOfType<TetrominoManager>();
     }
 
     void Update()
@@ -49,17 +48,23 @@ public class Tetromino : MonoBehaviour
         Fall();
         HandleInput();
 
+        // ゴーストブロックを更新
+        UpdateGhostBlock();
+
         // 着地したら終了
         if (status == Status.Landing)
         {
-            manager.Lockdown(this);
             status = Status.Lockdown;
+            Destroy(ghostBlockObject);
+            FindObjectOfType<TetrominoManager>().Lockdown(this);
         }
     }
 
     public void Falling()
     {
         status = Status.Falling;
+        ghostBlockObject = Instantiate(ghostBlock);
+        UpdateGhostBlock();
     }
 
     void Fall()
@@ -139,6 +144,34 @@ public class Tetromino : MonoBehaviour
 
     bool CheckCollision()
     {
-        return manager.CheckCollision(this);
+        return FindObjectOfType<TetrominoManager>().CheckCollision(this);
+    }
+
+    void UpdateGhostBlock()
+    {
+        var position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        bool validPosition = true;
+        int step = 1;
+
+        while (validPosition)
+        {
+            foreach (Transform child in transform)
+            {
+                int x = Mathf.RoundToInt(child.transform.position.x);
+                int y = Mathf.RoundToInt(child.transform.position.y);
+
+                if (FindObjectOfType<TetrominoManager>().CheckCollision(x, y - step))
+                {
+                    validPosition = false;
+                    position.y -= step - 1;
+                    break;
+                }
+            }
+
+            step++;
+        }
+
+        ghostBlockObject.transform.position = position;
+        ghostBlockObject.transform.rotation = transform.rotation;
     }
 }
