@@ -2,6 +2,14 @@ using UnityEngine;
 
 public class Tetromino : MonoBehaviour
 {
+    enum Status
+    {
+        Standby,
+        Falling,
+        Landing,
+        Lockdown,
+    }
+
     // 落下間隔（デフォルト）
     public float defaultFallTime = 1.0f;
 
@@ -18,19 +26,21 @@ public class Tetromino : MonoBehaviour
     private float previousTime;
 
     // テトリミノの管理クラス
-    private TetriminoManager manager;
+    private TetrominoManager manager;
+
+    private Status status = Status.Standby;
 
     void Start()
     {
         fallTime = defaultFallTime;
         previousTime = Time.time;
-        manager = FindObjectOfType<TetriminoManager>();
+        manager = FindObjectOfType<TetrominoManager>();
     }
 
     void Update()
     {
         // 操作が無効の場合は何もしない
-        if (!enabled)
+        if (status != Status.Falling)
         {
             return;
         }
@@ -40,10 +50,16 @@ public class Tetromino : MonoBehaviour
         HandleInput();
 
         // 着地したら終了
-        if (!enabled)
+        if (status == Status.Landing)
         {
-            manager.OnLockdown(this);
+            manager.Lockdown(this);
+            status = Status.Lockdown;
         }
+    }
+
+    public void Falling()
+    {
+        status = Status.Falling;
     }
 
     void Fall()
@@ -61,7 +77,7 @@ public class Tetromino : MonoBehaviour
         if (CheckCollision())
         {
             transform.position += Vector3.up;
-            enabled = false;
+            status = Status.Landing;
         }
     }
 

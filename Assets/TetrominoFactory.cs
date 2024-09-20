@@ -1,8 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TetriminoManager : MonoBehaviour
+public class TetrominoFactory : MonoBehaviour
 {
+    // テトリミノの生成位置
     public Vector3 spawnPosition;
 
     // テトリミノのプレハブを保存するリスト
@@ -17,9 +19,7 @@ public class TetriminoManager : MonoBehaviour
     // 表示用のスロット
     public List<Transform> nextTetrominoSlots;
 
-    private Grid grid;
-
-    void Start()
+    void Awake()
     {
         if (tetrominoList.Count == 0)
         {
@@ -27,23 +27,26 @@ public class TetriminoManager : MonoBehaviour
             return;
         }
 
-        grid = FindObjectOfType<Grid>();
+        if (nextTetrominoSlots.Count == 0)
+        {
+            Debug.LogError("次のテトリミノを表示するスロットが設定されていません");
+            return;
+        }
 
         ShuffleCurrentTetrominoList();
         EnqueueNextTetrominoes();
-
-        Debug.LogWarning("最初のミノを生成");
-
-        SpawnTetromino();
     }
 
-    public void SpawnTetromino()
+    public GameObject Spawn()
     {
         var nextTetromino = nextTetrominoQueue.Dequeue();
-        Instantiate(nextTetromino, spawnPosition, Quaternion.identity);
+        var gameObject = Instantiate(nextTetromino, spawnPosition, Quaternion.identity);
+        gameObject.GetComponent<Tetromino>().Falling();
 
         EnqueueNextTetrominoes();
         UpdateNextTetrominoDisplay();
+
+        return gameObject;
     }
 
     void ShuffleCurrentTetrominoList()
@@ -76,7 +79,7 @@ public class TetriminoManager : MonoBehaviour
         }
     }
 
-    private void UpdateNextTetrominoDisplay()
+    void UpdateNextTetrominoDisplay()
     {
         // すでに表示されている次のミノを消す
         foreach (Transform slot in nextTetrominoSlots)
@@ -97,28 +100,7 @@ public class TetriminoManager : MonoBehaviour
                 var gameObject = Instantiate(nextTetrominoArray[i], nextTetrominoSlots[i]);
 
                 gameObject.transform.localScale = Vector3.one * 0.5f;
-
-                // 動かさないで表示させておく
-                gameObject.GetComponent<Tetromino>().enabled = false;
             }
         }
-    }
-
-    public bool CheckCollision(Tetromino tetromino)
-    {
-        return grid.CheckCollision(tetromino);
-    }
-
-    public void OnLockdown(Tetromino tetromino)
-    {
-        if (!grid.TryAdd(tetromino))
-        {
-            Debug.LogWarning("ゲームオーバー");
-            return;
-        }
-
-        Debug.LogWarning($"{tetromino.gameObject.name}がロックダウン、次のミノを生成");
-
-        SpawnTetromino();
     }
 }

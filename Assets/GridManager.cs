@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Grid : MonoBehaviour
+public class GridManager : MonoBehaviour
 {
     // グリッドの幅
     public int width = 10;
@@ -10,7 +10,7 @@ public class Grid : MonoBehaviour
 
     private Transform[,] grid;
 
-    void Start()
+    void Awake()
     {
         grid = new Transform[width, height];
     }
@@ -55,6 +55,40 @@ public class Grid : MonoBehaviour
         return false;
     }
 
+    public bool CheckCollision(int x, int y)
+    {
+        Debug.Log($"(x, y): ({x}, {y})");
+
+        if (x < 0)
+        {
+            Debug.Log($"左に接触: ({x}, {y})");
+            return true;
+        }
+
+        if (x >= width)
+        {
+            Debug.Log($"右に接触: ({x}, {y})");
+            return true;
+        }
+
+        if (y < 0)
+        {
+            Debug.Log($"地面に接触: ({x}, {y})");
+            return true;
+        }
+
+        if (x < width && y < height)
+        {
+            if (Filled(x, y))
+            {
+                Debug.Log($"他のミノに接触: ({x}, {y})");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // テトリミノをグリッドに追加する
     public bool TryAdd(Tetromino tetromino)
     {
@@ -90,7 +124,7 @@ public class Grid : MonoBehaviour
         }
     }
 
-    bool Filled(int x, int y)
+    public bool Filled(int x, int y)
     {
         return grid[x, y] != null;
     }

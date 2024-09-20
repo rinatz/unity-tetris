@@ -257,19 +257,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01432a0c00e358c4eb3e3c9cba79cd1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPosition: {x: 5, y: 20, z: 0}
-  tetrominoList:
-  - {fileID: 8654692720435502289, guid: 120e3dcb0cd9c104e982d64cc91bb257, type: 3}
-  - {fileID: 8328215675115359535, guid: 51384ed892535a846b4f9163ac706a59, type: 3}
-  - {fileID: 5130085964668275160, guid: ea2aae1abfde5f24a8f1a032641345e4, type: 3}
-  - {fileID: 8106932516078497603, guid: 9389117f05ab15544b943bc61f5b0284, type: 3}
-  - {fileID: 7718176818264478010, guid: 58d504da22ccd824799ad35d7ce93be5, type: 3}
-  - {fileID: 2765540897774431712, guid: 1678ef328cb5ba34b939ad4d28578f37, type: 3}
-  - {fileID: 588388105213992737, guid: 55b711298535f8a4aafd9c8ef19a29e7, type: 3}
-  nextTetrominoSlots:
-  - {fileID: 1623517260}
-  - {fileID: 1680543795}
-  - {fileID: 2095741416}
 --- !u!1 &508716567
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,6 +527,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1572995990}
+  - component: {fileID: 1572995991}
   m_Layer: 0
   m_Name: SpawnPosition
   m_TagString: Untagged
@@ -562,6 +550,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 261439841}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1572995991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572995989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87c5ec044fe31584dbce2419331c73dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPosition: {x: 5, y: 20, z: 0}
+  tetrominoList:
+  - {fileID: 8654692720435502289, guid: 120e3dcb0cd9c104e982d64cc91bb257, type: 3}
+  - {fileID: 8328215675115359535, guid: 51384ed892535a846b4f9163ac706a59, type: 3}
+  - {fileID: 5130085964668275160, guid: ea2aae1abfde5f24a8f1a032641345e4, type: 3}
+  - {fileID: 8106932516078497603, guid: 9389117f05ab15544b943bc61f5b0284, type: 3}
+  - {fileID: 7718176818264478010, guid: 58d504da22ccd824799ad35d7ce93be5, type: 3}
+  - {fileID: 2765540897774431712, guid: 1678ef328cb5ba34b939ad4d28578f37, type: 3}
+  - {fileID: 588388105213992737, guid: 55b711298535f8a4aafd9c8ef19a29e7, type: 3}
+  nextTetrominoSlots:
+  - {fileID: 1623517260}
+  - {fileID: 1680543795}
+  - {fileID: 2095741416}
 --- !u!1 &1623517259
 GameObject:
   m_ObjectHideFlags: 0
