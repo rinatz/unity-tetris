@@ -19,6 +19,9 @@ public class Tetromino : MonoBehaviour
     // ハードドロップの間隔
     public float hardDropTime = 0.0001f;
 
+    // 着してから固定されるまでの遊びの時間
+    public float landingTime = 0.3f;
+
     // 落下間隔
     private float fallTime;
 
@@ -43,12 +46,12 @@ public class Tetromino : MonoBehaviour
     void Update()
     {
         // 操作が無効の場合は何もしない
-        if (status != Status.Falling)
+        if (!Controllable())
         {
             return;
         }
 
-        // 着地したら enabled フラグが落ちる
+        // 着地したら status が変化する
         Fall();
         HandleInput();
 
@@ -56,13 +59,17 @@ public class Tetromino : MonoBehaviour
         UpdateGhostBlock();
 
         // 着地したら終了
-        if (status == Status.Landing)
+        if (status == Status.Lockdown)
         {
-            status = Status.Lockdown;
             GetComponent<AudioSource>().PlayOneShot(lockdownSound);
             Destroy(ghostBlockObject);
             FindObjectOfType<TetrominoManager>().Lockdown(this);
         }
+    }
+
+    bool Controllable()
+    {
+        return status == Status.Falling || status == Status.Landing;
     }
 
     public void Falling()
@@ -87,7 +94,18 @@ public class Tetromino : MonoBehaviour
         if (CheckCollision())
         {
             transform.position += Vector3.up;
-            status = Status.Landing;
+
+            if (status == Status.Falling)
+            {
+                status = Status.Landing;
+
+                // 固定するまで遊びの時間を設ける
+                fallTime = landingTime;
+            }
+            else if (status == Status.Landing)
+            {
+                status = Status.Lockdown;
+            }
         }
     }
 
