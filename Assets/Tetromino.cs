@@ -6,12 +6,14 @@ public class Tetromino : MonoBehaviour
     {
         Standby,    // 投下待ち
         Falling,    // 落下中
+        Holding,    // ホールド中
         Landing,    // 着地中
         Lockdown,   // ロックダウン（固定）
     }
 
     // テトリミノのステータス
     private Status status = Status.Standby;
+    public bool heldAlready = false;
 
     // 落下間隔（デフォルト）
     public float defaultFallTime = 1.0f;
@@ -206,6 +208,11 @@ public class Tetromino : MonoBehaviour
         {
             fallTime = hardDropTime;
         }
+        // ホールド
+        else if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Hold();
+        }
     }
 
     private void UpdateGhostBlock()
@@ -241,6 +248,16 @@ public class Tetromino : MonoBehaviour
         Destroy(ghostBlockObject);
 
         TetrominoManager.Lockdown(this);
+    }
+
+    private void Hold()
+    {
+        if (TetrominoManager.TryHold(this))
+        {
+            heldAlready = true;
+            status = Status.Holding;
+            Destroy(ghostBlockObject);
+        }
     }
 
     private void PlayMoveSound()

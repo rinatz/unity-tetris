@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +14,11 @@ public class TetrominoFactory : MonoBehaviour
 
     // 表示用のスロット
     public List<Transform> nextSlots;
+
+    private GameObject heldTetromino;
+
+    // ホールド用のスロット
+    public Transform holdSlot;
 
     void Awake()
     {
@@ -52,8 +56,15 @@ public class TetrominoFactory : MonoBehaviour
 
     public void Clear()
     {
-        ClearNextSlots();
         ClearTetrominoQueue();
+        ClearNextSlots();
+        ClearHoldSlot();
+    }
+
+    void ClearTetrominoQueue()
+    {
+        tetrominoQueue.Clear();
+        Enqueue(Shuffle(tetrominoList));
     }
 
     void ClearNextSlots()
@@ -67,10 +78,9 @@ public class TetrominoFactory : MonoBehaviour
         }
     }
 
-    void ClearTetrominoQueue()
+    void ClearHoldSlot()
     {
-        tetrominoQueue.Clear();
-        Enqueue(Shuffle(tetrominoList));
+        Destroy(heldTetromino);
     }
 
     static List<GameObject> Shuffle(List<GameObject> items)
@@ -120,5 +130,34 @@ public class TetrominoFactory : MonoBehaviour
             var gameObject = Instantiate(nextTetrominoArray[i], nextSlots[i]);
             gameObject.transform.localScale = Vector3.one * 0.5f;
         }
+    }
+
+    public bool TryHold(Tetromino tetromino)
+    {
+        // 一度ホールドしている場合はホールドしない
+        if (tetromino.heldAlready)
+        {
+            return false;
+        }
+
+        if (heldTetromino == null)
+        {
+            // ホールド済みのテトリミノがなければ投下するテトリミノを生成
+            Spawn();
+        }
+        else
+        {
+            // ホールド済みのテトリミノがある場合はリリースする
+            heldTetromino.transform.position = spawnPosition;
+            heldTetromino.transform.localScale = Vector3.one * 1f;
+            heldTetromino.GetComponent<Tetromino>().Falling();
+        }
+
+        tetromino.transform.position = holdSlot.transform.position;
+        tetromino.transform.localScale = Vector3.one * 0.5f;
+
+        heldTetromino = tetromino.gameObject;
+
+        return true;
     }
 }

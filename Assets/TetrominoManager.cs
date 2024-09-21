@@ -114,4 +114,9 @@ public class TetrominoManager : MonoBehaviour
 
         factory.Spawn();
     }
+
+    public bool TryHold(Tetromino tetromino)
+    {
+        return factory.TryHold(tetromino);
+    }
 }
