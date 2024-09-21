@@ -5,6 +5,7 @@ using UnityEngine;
 public class TetrominoManager : MonoBehaviour
 {
     public GameObject playText;
+    private GameObject playTextObject;
     public GameObject gameOverText;
     public AudioClip okButtonSound;
     private GridManager grid;
@@ -15,6 +16,7 @@ public class TetrominoManager : MonoBehaviour
         grid = FindObjectOfType<GridManager>();
         factory = FindObjectOfType<TetrominoFactory>();
 
+        playTextObject = Instantiate(playText);
         StartCoroutine(FlushOkButtonText(0.5f));
     }
 
@@ -30,7 +32,7 @@ public class TetrominoManager : MonoBehaviour
 
     private IEnumerator FlushOkButtonText(float seconds)
     {
-        var child = playText.transform.Find("PressOkButtonText");
+        var child = playTextObject.transform.Find("PressOkButtonText");
 
         if (child != null)
         {
@@ -66,17 +68,26 @@ public class TetrominoManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
-        Destroy(playText);
+        Destroy(playTextObject);
         PlaySound();
 
         factory.Spawn();
     }
 
-    private void GameOver()
+    private IEnumerator GameOver()
     {
         Debug.LogWarning("ゲームオーバー");
 
-        Instantiate(gameOverText);
+        var gameObject = Instantiate(gameOverText);
+
+        yield return new WaitForSeconds(3.0f);
+
+        GetComponent<AudioSource>().Stop();
+        Destroy(gameObject);
+        grid.Clear();
+
+        playTextObject = Instantiate(playText);
+        StartCoroutine(FlushOkButtonText(0.5f));
     }
 
     void PlaySound()
@@ -91,7 +102,10 @@ public class TetrominoManager : MonoBehaviour
 
         if (!grid.TryAdd(tetromino.transform))
         {
-            GameOver();
+            // グリッドからはみ出た分はグリッドの削除で一緒に削除できないのでここで削除
+            Destroy(tetromino.gameObject);
+
+            StartCoroutine(GameOver());
             return;
         }
 

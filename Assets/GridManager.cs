@@ -17,6 +17,23 @@ public class GridManager : MonoBehaviour
         grid = new Transform[width, height];
     }
 
+    public void Clear()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (grid[x, y] == null)
+                {
+                    continue;
+                }
+
+                Destroy(grid[x, y].gameObject);
+                grid[x, y] = null;
+            }
+        }
+    }
+
     public static Vector3 GetGridPosition(Vector3 p)
     {
         int x = Mathf.RoundToInt(p.x);
