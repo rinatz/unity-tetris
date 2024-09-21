@@ -2,13 +2,16 @@ using UnityEngine;
 
 public class Tetromino : MonoBehaviour
 {
-    enum Status
+    private enum Status
     {
-        Standby,
-        Falling,
-        Landing,
-        Lockdown,
+        Standby,    // 投下待ち
+        Falling,    // 落下中
+        Landing,    // 着地中
+        Lockdown,   // ロックダウン（固定）
     }
+
+    // テトリミノのステータス
+    private Status status = Status.Standby;
 
     // 落下間隔（デフォルト）
     public float defaultFallTime = 1.0f;
@@ -28,16 +31,22 @@ public class Tetromino : MonoBehaviour
     // 前回落下した時間
     private float previousTime;
 
-    private Status status = Status.Standby;
-
+    // ゴーストブロック（落下位置を示すブロック）のプレハブ
     public GameObject ghostBlock;
+
+    // 生成されたゴーストブロック
     private GameObject ghostBlockObject;
 
+    // 移動時の効果音
     public AudioClip moveSound;
+
+    // 回転時の効果音
     public AudioClip rotationSound;
+
+    // ロックダウン時の効果音
     public AudioClip lockdownSound;
 
-    GridManager GridManager
+    private GridManager GridManager
     {
         get
         {
@@ -45,13 +54,29 @@ public class Tetromino : MonoBehaviour
         }
     }
 
-    void Start()
+    private TetrominoManager TetrominoManager
+    {
+        get
+        {
+            return FindObjectOfType<TetrominoManager>();
+        }
+    }
+
+    private AudioSource AudioSource
+    {
+        get
+        {
+            return GetComponent<AudioSource>();
+        }
+    }
+
+    private void Start()
     {
         fallTime = defaultFallTime;
         previousTime = Time.time;
     }
 
-    void Update()
+    private void Update()
     {
         // 操作が無効の場合は何もしない
         if (!Controllable())
@@ -69,13 +94,11 @@ public class Tetromino : MonoBehaviour
         // 着地したら終了
         if (status == Status.Lockdown)
         {
-            GetComponent<AudioSource>().PlayOneShot(lockdownSound);
-            Destroy(ghostBlockObject);
-            FindObjectOfType<TetrominoManager>().Lockdown(this);
+            Lockdown();
         }
     }
 
-    bool Controllable()
+    private bool Controllable()
     {
         return status == Status.Falling || status == Status.Landing;
     }
@@ -87,7 +110,7 @@ public class Tetromino : MonoBehaviour
         UpdateGhostBlock();
     }
 
-    void Fall()
+    private void Fall()
     {
         // fallTime 以上経過するまで待機する
         if (Time.time - previousTime < fallTime)
@@ -117,7 +140,7 @@ public class Tetromino : MonoBehaviour
         }
     }
 
-    void HandleInput()
+    private void HandleInput()
     {
         // 左移動（左ボタン）
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -130,7 +153,7 @@ public class Tetromino : MonoBehaviour
             }
             else
             {
-                GetComponent<AudioSource>().PlayOneShot(moveSound);
+                PlayMoveSound();
             }
         }
         // 右移動（右ボタン）
@@ -144,7 +167,7 @@ public class Tetromino : MonoBehaviour
             }
             else
             {
-                GetComponent<AudioSource>().PlayOneShot(moveSound);
+                PlayMoveSound();
             }
         }
         // 回転（上ボタン）
@@ -160,7 +183,7 @@ public class Tetromino : MonoBehaviour
             }
             else
             {
-                GetComponent<AudioSource>().PlayOneShot(rotationSound);
+                PlayRotationSound();
             }
         }
         // ソフトドロップ
@@ -185,7 +208,7 @@ public class Tetromino : MonoBehaviour
         }
     }
 
-    void UpdateGhostBlock()
+    private void UpdateGhostBlock()
     {
         var position = transform.position;
         bool validPosition = true;
@@ -210,5 +233,28 @@ public class Tetromino : MonoBehaviour
 
         ghostBlockObject.transform.position = position;
         ghostBlockObject.transform.rotation = transform.rotation;
+    }
+
+    private void Lockdown()
+    {
+        PlayLockdownSound();
+        Destroy(ghostBlockObject);
+
+        TetrominoManager.Lockdown(this);
+    }
+
+    private void PlayMoveSound()
+    {
+        AudioSource.PlayOneShot(moveSound);
+    }
+
+    private void PlayRotationSound()
+    {
+        AudioSource.PlayOneShot(rotationSound);
+    }
+
+    private void PlayLockdownSound()
+    {
+        AudioSource.PlayOneShot(lockdownSound);
     }
 }
