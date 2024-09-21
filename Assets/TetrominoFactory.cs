@@ -132,14 +132,8 @@ public class TetrominoFactory : MonoBehaviour
         }
     }
 
-    public bool TryHold(Tetromino tetromino)
+    public bool Hold(Tetromino tetromino)
     {
-        // 一度ホールドしている場合はホールドしない
-        if (tetromino.heldAlready)
-        {
-            return false;
-        }
-
         if (heldTetromino == null)
         {
             // ホールド済みのテトリミノがなければ投下するテトリミノを生成

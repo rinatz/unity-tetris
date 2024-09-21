@@ -13,7 +13,9 @@ public class Tetromino : MonoBehaviour
 
     // テトリミノのステータス
     private Status status = Status.Standby;
-    public bool heldAlready = false;
+
+    // ホールドできるかどうか
+    private bool canHold = true;
 
     // 落下間隔（デフォルト）
     public float defaultFallTime = 1.0f;
@@ -252,12 +254,18 @@ public class Tetromino : MonoBehaviour
 
     private void Hold()
     {
-        if (TetrominoManager.TryHold(this))
+        if (!canHold)
         {
-            heldAlready = true;
-            status = Status.Holding;
-            Destroy(ghostBlockObject);
+            return;
         }
+
+        // ホールドは一度しかできない
+        canHold = false;
+
+        status = Status.Holding;
+        Destroy(ghostBlockObject);
+
+        TetrominoManager.Hold(this);
     }
 
     private void PlayMoveSound()
