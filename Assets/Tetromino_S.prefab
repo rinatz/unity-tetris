@@ -52,10 +52,11 @@ MonoBehaviour:
   defaultFallTime: 1
   accelerate: 20
   hardDropTime: 0.0001
+  landingTime: 0.5
   ghostBlock: {fileID: 5062754495573982087, guid: 24c73ff1df8a8ed469b2522837a6483c, type: 3}
-  moveSound: {fileID: 8300000, guid: 0d6f3f933c5a1394fb692c5db717b900, type: 3}
-  rotationSound: {fileID: 8300000, guid: db223b9779749a747a1f977d9ef9b60d, type: 3}
-  lockdownSound: {fileID: 8300000, guid: 26a784438250a754586ef9b43de44426, type: 3}
+  moveSound: {fileID: 8300000, guid: 7a4d907e840828d4d93c4ce15d869401, type: 3}
+  rotationSound: {fileID: 8300000, guid: 7a4d907e840828d4d93c4ce15d869401, type: 3}
+  lockdownSound: {fileID: 8300000, guid: 368a9690497296b4fbd97fe085004208, type: 3}
 --- !u!82 &881431806280939916
 AudioSource:
   m_ObjectHideFlags: 0
