@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Tetromino : MonoBehaviour
@@ -88,6 +89,8 @@ public class Tetromino : MonoBehaviour
             return;
         }
 
+        fallTime = FallTimeOfLevel(GridManager.Level);
+
         // 着地したら status が変化する
         Fall();
         HandleInput();
@@ -112,6 +115,12 @@ public class Tetromino : MonoBehaviour
         status = Status.Falling;
         ghostBlockObject = Instantiate(ghostBlock);
         UpdateGhostBlock();
+    }
+
+    float FallTimeOfLevel(int level)
+    {
+        // 早い方を優先する
+        return Math.Min(fallTime, defaultFallTime / level);
     }
 
     private void Fall()
@@ -198,12 +207,12 @@ public class Tetromino : MonoBehaviour
         // ソフトドロップ（高速）
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            fallTime = defaultFallTime / accelerate;
+            fallTime = FallTimeOfLevel(GridManager.Level) / accelerate;
         }
         // ソフトドロップ（高速）の解除
         else if (Input.GetKeyUp(KeyCode.DownArrow))
         {
-            fallTime = defaultFallTime;
+            fallTime = FallTimeOfLevel(GridManager.Level);
         }
         // ハードドロップ
         else if (Input.GetKeyDown(KeyCode.Space))

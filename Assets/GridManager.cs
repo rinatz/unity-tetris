@@ -12,6 +12,14 @@ public class GridManager : MonoBehaviour
 
     private Transform[,] grid;
 
+    private int clearLineCount = 0;
+    private int level = 1;
+
+    public int Level
+    {
+        get { return level; }
+    }
+
     private void Awake()
     {
         grid = new Transform[width, height];
@@ -168,6 +176,20 @@ public class GridManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
 
         FallOneRankAbove(y);
+
+        clearLineCount++;
+        UpdateLevel();
+    }
+
+    void UpdateLevel()
+    {
+        if (clearLineCount == 10)
+        {
+            Debug.LogWarning($"レベル{level}");
+
+            level++;
+            clearLineCount = 0;
+        }
     }
 
     // yMin より上のブロックを下に移動させる
