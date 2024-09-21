@@ -39,7 +39,7 @@ public class TetrominoFactory : MonoBehaviour
         var gameObject = Dequeue();
 
         // 表示用のテトリミノがスロット数に満たない場合はテトリミノをキューに追加
-        if (tetrominoQueue.Count < nextSlots.Count)
+        while (tetrominoQueue.Count < nextSlots.Count)
         {
             Enqueue(Shuffle(tetrominoList));
         }
@@ -48,6 +48,29 @@ public class TetrominoFactory : MonoBehaviour
         DisplayNext();
 
         return gameObject;
+    }
+
+    public void Clear()
+    {
+        ClearNextSlots();
+        ClearTetrominoQueue();
+    }
+
+    void ClearNextSlots()
+    {
+        foreach (Transform slot in nextSlots)
+        {
+            foreach (Transform child in slot)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+
+    void ClearTetrominoQueue()
+    {
+        tetrominoQueue.Clear();
+        Enqueue(Shuffle(tetrominoList));
     }
 
     static List<GameObject> Shuffle(List<GameObject> items)
@@ -87,13 +110,7 @@ public class TetrominoFactory : MonoBehaviour
     void DisplayNext()
     {
         // すでに表示されている次のミノを消す
-        foreach (Transform slot in nextSlots)
-        {
-            foreach (Transform child in slot)
-            {
-                Destroy(child.gameObject);
-            }
-        }
+        ClearNextSlots();
 
         // 次のミノを表示
         var nextTetrominoArray = tetrominoQueue.ToArray();

@@ -85,6 +85,7 @@ public class TetrominoManager : MonoBehaviour
         GetComponent<AudioSource>().Stop();
         Destroy(gameObject);
         grid.Clear();
+        factory.Clear();
 
         playTextObject = Instantiate(playText);
         StartCoroutine(FlushOkButtonText(0.5f));
