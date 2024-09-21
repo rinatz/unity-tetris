@@ -192,10 +192,9 @@ public class Tetromino : MonoBehaviour
         {
             foreach (Transform child in transform)
             {
-                int x = Mathf.RoundToInt(child.transform.position.x);
-                int y = Mathf.RoundToInt(child.transform.position.y);
+                var p = child.transform.position - new Vector3(0, step, 0);
 
-                if (FindObjectOfType<TetrominoManager>().CheckCollision(x, y - step))
+                if (FindObjectOfType<TetrominoManager>().CheckCollision(p))
                 {
                     validPosition = false;
                     position.y -= step - 1;

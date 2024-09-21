@@ -20,9 +20,9 @@ public class TetrominoManager : MonoBehaviour
         return grid.CheckCollision(tetromino);
     }
 
-    public bool CheckCollision(int x, int y)
+    public bool CheckCollision(Vector3 p)
     {
-        return grid.CheckCollision(x, y);
+        return grid.CheckCollision(p);
     }
 
     // テトリミノの落下位置を記録して新たなテトリミノを生成

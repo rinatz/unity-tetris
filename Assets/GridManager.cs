@@ -21,42 +21,20 @@ public class GridManager : MonoBehaviour
     {
         foreach (Transform child in tetromino.transform)
         {
-            var x = Mathf.RoundToInt(child.transform.position.x);
-            var y = Mathf.RoundToInt(child.transform.position.y);
-
-            if (x < 0)
+            if (CheckCollision(child.transform.position))
             {
-                Debug.Log($"{child.name}が左に接触: ({x}, {y})");
                 return true;
-            }
-
-            if (x >= width)
-            {
-                Debug.Log($"{child.name}が右に接触: ({x}, {y})");
-                return true;
-            }
-
-            if (y < 0)
-            {
-                Debug.Log($"{child.name}が地面に接触: ({x}, {y})");
-                return true;
-            }
-
-            if (x < width && y < height)
-            {
-                if (Filled(x, y))
-                {
-                    Debug.Log($"{child.name}が他のミノに接触: ({x}, {y})");
-                    return true;
-                }
             }
         }
 
         return false;
     }
 
-    public bool CheckCollision(int x, int y)
+    public bool CheckCollision(Vector3 p)
     {
+        int x = Mathf.RoundToInt(p.x);
+        int y = Mathf.RoundToInt(p.y);
+
         if (x < 0)
         {
             return true;
