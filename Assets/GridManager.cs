@@ -1,5 +1,7 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GridManager : MonoBehaviour
 {
@@ -11,8 +13,11 @@ public class GridManager : MonoBehaviour
 
     private Transform[,] grid;
 
-    private int clearLineCount = 0;
     private int level = 1;
+    private int lines = 0;
+
+    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI linesText;
 
     public int Level
     {
@@ -22,10 +27,19 @@ public class GridManager : MonoBehaviour
     private void Awake()
     {
         grid = new Transform[width, height];
+
+        levelText.text = $"{level:D2}";
+        linesText.text = $"{lines:D9}";
     }
 
     public void Clear()
     {
+        level = 1;
+        levelText.text = $"{level:D2}";
+
+        lines = 0;
+        linesText.text = $"{lines:D9}";
+
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -183,18 +197,20 @@ public class GridManager : MonoBehaviour
         FallOneRankAbove(y);
         PlayClearLineSound();
 
-        clearLineCount++;
+        lines++;
+        linesText.text = $"{lines:D9}";
+
         UpdateLevel();
     }
 
     void UpdateLevel()
     {
-        if (clearLineCount == 10)
+        if (lines % 10 == 0)
         {
             Debug.LogWarning($"レベル{level}");
 
             level++;
-            clearLineCount = 0;
+            levelText.text = $"{level:D2}";
         }
     }
 

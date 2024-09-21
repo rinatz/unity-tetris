@@ -4,49 +4,37 @@ using UnityEngine;
 
 public class TetrominoManager : MonoBehaviour
 {
-    public GameObject playText;
-    private GameObject playTextObject;
-    public GameObject gameOverText;
-    public AudioClip okButtonSound;
+    public TextMeshProUGUI mainText;
+    public TextMeshProUGUI subText;
+    public AudioClip startSound;
     private GridManager grid;
     private TetrominoFactory factory;
+    private float flushTime;
 
     private void Start()
     {
         grid = FindObjectOfType<GridManager>();
         factory = FindObjectOfType<TetrominoFactory>();
 
-        playTextObject = Instantiate(playText);
-        StartCoroutine(FlushOkButtonText(0.5f));
+        mainText.text = "PLAY";
+        subText.text = "PRESS START";
     }
 
     private void Update()
     {
+        flushTime += Time.deltaTime * 5.0f;
+
+        var color = subText.color;
+        color.a = Mathf.Sin(flushTime);
+
+        subText.color = color;
+
         if (!Ready())
         {
             return;
         }
 
         StartCoroutine(PlayCoroutine());
-    }
-
-    private IEnumerator FlushOkButtonText(float seconds)
-    {
-        var child = playTextObject.transform.Find("PressOkButtonText");
-
-        if (child != null)
-        {
-            var text = child.GetComponent<TextMeshProUGUI>();
-
-            while (true)
-            {
-                text.color = new Color(text.color.r, text.color.g, text.color.b, 0);
-                yield return new WaitForSeconds(seconds);
-
-                text.color = new Color(text.color.r, text.color.g, text.color.b, 1);
-                yield return new WaitForSeconds(seconds);
-            }
-        }
     }
 
     private bool Ready()
@@ -63,32 +51,30 @@ public class TetrominoManager : MonoBehaviour
     {
         Debug.Log("プレイ開始");
 
-        GetComponent<AudioSource>().PlayOneShot(okButtonSound);
-        StartCoroutine(FlushOkButtonText(0.05f));
+        mainText.text = "";
+        subText.text = "";
+        GetComponent<AudioSource>().PlayOneShot(startSound);
 
         yield return new WaitForSeconds(1.0f);
 
-        Destroy(playTextObject);
         PlaySound();
-
         factory.Spawn();
     }
 
-    private IEnumerator GameOver()
+    private IEnumerator GameOverCoroutine()
     {
         Debug.LogWarning("ゲームオーバー");
 
-        var gameObject = Instantiate(gameOverText);
+        mainText.text = "GAMEOVER";
 
         yield return new WaitForSeconds(3.0f);
 
         GetComponent<AudioSource>().Stop();
-        Destroy(gameObject);
         grid.Clear();
         factory.Clear();
 
-        playTextObject = Instantiate(playText);
-        StartCoroutine(FlushOkButtonText(0.5f));
+        mainText.text = "PLAY";
+        subText.text = "PRESS START";
     }
 
     void PlaySound()
@@ -106,7 +92,8 @@ public class TetrominoManager : MonoBehaviour
             // グリッドからはみ出た分はグリッドの削除で一緒に削除できないのでここで削除
             Destroy(tetromino.gameObject);
 
-            StartCoroutine(GameOver());
+            StartCoroutine(GameOverCoroutine());
+
             return;
         }
 

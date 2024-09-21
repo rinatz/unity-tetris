@@ -143,6 +143,7 @@ public class Tetromino : MonoBehaviour
                 status = Status.Landing;
 
                 // 固定するまで遊びの時間を設ける
+                // FIXME: レベルが上ってもここで落下速度が遅くなってしまう
                 fallTime = landingTime;
             }
             else if (status == Status.Landing)
