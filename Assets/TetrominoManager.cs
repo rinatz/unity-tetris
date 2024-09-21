@@ -1,18 +1,64 @@
+using System.Collections;
 using UnityEngine;
 
 public class TetrominoManager : MonoBehaviour
 {
+    public GameObject playText;
+    public GameObject gameOverText;
+    public AudioClip playSound;
     private GridManager grid;
     private TetrominoFactory factory;
 
-    void Start()
+    private void Start()
     {
         grid = FindObjectOfType<GridManager>();
         factory = FindObjectOfType<TetrominoFactory>();
+    }
 
-        Debug.LogWarning("最初のミノを生成");
+    private void Update()
+    {
+        if (!Ready())
+        {
+            return;
+        }
+
+        StartCoroutine(PlayCoroutine());
+    }
+
+    private bool Ready()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private IEnumerator PlayCoroutine()
+    {
+        Debug.Log("プレイ開始");
+
+        GetComponent<AudioSource>().PlayOneShot(playSound);
+
+        yield return new WaitForSeconds(1.0f);
+
+        Destroy(playText);
+        PlaySound();
 
         factory.Spawn();
+    }
+
+    private void GameOver()
+    {
+        Debug.LogWarning("ゲームオーバー");
+
+        Instantiate(gameOverText);
+    }
+
+    void PlaySound()
+    {
+        GetComponent<AudioSource>().Play();
     }
 
     // テトリミノの落下位置を記録して新たなテトリミノを生成
@@ -22,7 +68,7 @@ public class TetrominoManager : MonoBehaviour
 
         if (!grid.TryAdd(tetromino.transform))
         {
-            Debug.LogWarning("ゲームオーバー");
+            GameOver();
             return;
         }
 
