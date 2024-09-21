@@ -12,12 +12,12 @@ public class GridManager : MonoBehaviour
 
     private Transform[,] grid;
 
-    void Awake()
+    private void Awake()
     {
         grid = new Transform[width, height];
     }
 
-    public static Vector3 GridPosition(Vector3 p)
+    public static Vector3 GetGridPosition(Vector3 p)
     {
         int x = Mathf.RoundToInt(p.x);
         int y = Mathf.RoundToInt(p.y);
@@ -41,7 +41,7 @@ public class GridManager : MonoBehaviour
 
     public bool CheckCollision(Vector3 position)
     {
-        var p = GridPosition(position);
+        var p = GetGridPosition(position);
 
         if (p.x < 0)
         {
@@ -57,6 +57,8 @@ public class GridManager : MonoBehaviour
         {
             return true;
         }
+
+        // y >= height のチェックはしない（テトリミノの生成後はこの条件を満たすため）
 
         if (p.x < width && p.y < height)
         {
@@ -74,16 +76,15 @@ public class GridManager : MonoBehaviour
     {
         foreach (Transform child in transform)
         {
-            var x = Mathf.RoundToInt(child.transform.position.x);
-            var y = Mathf.RoundToInt(child.transform.position.y);
+            var p = GetGridPosition(child.transform.position);
 
-            if (y >= height)
+            if (p.y >= height)
             {
                 Debug.LogWarning("ミノが積み上がりました");
                 return false;
             }
 
-            grid[x, y] = child;
+            grid[(int)p.x, (int)p.y] = child;
         }
 
         UpdateGrid();
@@ -91,16 +92,15 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
-    void UpdateGrid()
+    private void UpdateGrid()
     {
         for (int y = height - 1; y >= 0; y--)
         {
-            if (!FilledLine(y))
+            // y行がブロックで埋め尽くされたら削除する
+            if (FilledLine(y))
             {
-                continue;
+                ClearLine(y);
             }
-
-            ClearLine(y);
         }
     }
 
@@ -115,7 +115,7 @@ public class GridManager : MonoBehaviour
     }
 
     // y行はブロックで埋め尽くされたかどうかを調べる
-    bool FilledLine(int y)
+    private bool FilledLine(int y)
     {
         for (int x = 0; x < width; x++)
         {
@@ -131,12 +131,12 @@ public class GridManager : MonoBehaviour
     }
 
     // y 行目を削除する
-    void ClearLine(int y)
+    private void ClearLine(int y)
     {
         StartCoroutine(ClearLineCoroutine(y));
     }
 
-    IEnumerator ClearLineCoroutine(int y)
+    private IEnumerator ClearLineCoroutine(int y)
     {
         for (int x = 0; x < width; x++)
         {
@@ -146,7 +146,7 @@ public class GridManager : MonoBehaviour
             grid[x, y] = null;
         }
 
-        GetComponent<AudioSource>().Play();
+        PlayClearLineSound();
 
         yield return new WaitForSeconds(0.2f);
 
@@ -154,7 +154,7 @@ public class GridManager : MonoBehaviour
     }
 
     // yMin より上のブロックを下に移動させる
-    void FallOneRankAbove(int yMin)
+    private void FallOneRankAbove(int yMin)
     {
         for (int y = yMin + 1; y < height; y++)
         {
@@ -171,5 +171,10 @@ public class GridManager : MonoBehaviour
                 grid[x, y] = null;
             }
         }
+    }
+
+    private void PlayClearLineSound()
+    {
+        GetComponent<AudioSource>().Play();
     }
 }
