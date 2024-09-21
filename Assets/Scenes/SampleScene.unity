@@ -173,7 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playText: {fileID: 1127139473}
   gameOverText: {fileID: 5181562064143624030, guid: 097bfadcd641a4344bf69dac4ac9032b, type: 3}
-  playSound: {fileID: 8300000, guid: 18321b8249c86b6448eaaf8c2349f577, type: 3}
+  okButtonSound: {fileID: 8300000, guid: 18321b8249c86b6448eaaf8c2349f577, type: 3}
 --- !u!82 &261439843
 AudioSource:
   m_ObjectHideFlags: 0
@@ -494,7 +494,7 @@ GameObject:
   - component: {fileID: 913359041}
   - component: {fileID: 913359040}
   m_Layer: 5
-  m_Name: PressButtonText
+  m_Name: PressOkButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

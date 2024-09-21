@@ -1,11 +1,12 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class TetrominoManager : MonoBehaviour
 {
     public GameObject playText;
     public GameObject gameOverText;
-    public AudioClip playSound;
+    public AudioClip okButtonSound;
     private GridManager grid;
     private TetrominoFactory factory;
 
@@ -13,6 +14,8 @@ public class TetrominoManager : MonoBehaviour
     {
         grid = FindObjectOfType<GridManager>();
         factory = FindObjectOfType<TetrominoFactory>();
+
+        StartCoroutine(FlushOkButtonText(0.5f));
     }
 
     private void Update()
@@ -23,6 +26,25 @@ public class TetrominoManager : MonoBehaviour
         }
 
         StartCoroutine(PlayCoroutine());
+    }
+
+    private IEnumerator FlushOkButtonText(float seconds)
+    {
+        var child = playText.transform.Find("PressOkButtonText");
+
+        if (child != null)
+        {
+            var text = child.GetComponent<TextMeshProUGUI>();
+
+            while (true)
+            {
+                text.color = new Color(text.color.r, text.color.g, text.color.b, 0);
+                yield return new WaitForSeconds(seconds);
+
+                text.color = new Color(text.color.r, text.color.g, text.color.b, 1);
+                yield return new WaitForSeconds(seconds);
+            }
+        }
     }
 
     private bool Ready()
@@ -39,7 +61,8 @@ public class TetrominoManager : MonoBehaviour
     {
         Debug.Log("プレイ開始");
 
-        GetComponent<AudioSource>().PlayOneShot(playSound);
+        GetComponent<AudioSource>().PlayOneShot(okButtonSound);
+        StartCoroutine(FlushOkButtonText(0.05f));
 
         yield return new WaitForSeconds(1.0f);
 
