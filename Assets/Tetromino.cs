@@ -37,6 +37,14 @@ public class Tetromino : MonoBehaviour
     public AudioClip rotationSound;
     public AudioClip lockdownSound;
 
+    GridManager GridManager
+    {
+        get
+        {
+            return FindObjectOfType<GridManager>();
+        }
+    }
+
     void Start()
     {
         fallTime = defaultFallTime;
@@ -91,7 +99,7 @@ public class Tetromino : MonoBehaviour
         transform.position += Vector3.down;
 
         // 範囲外に行ったら1マス戻して無効化する（着地）
-        if (CheckCollision())
+        if (GridManager.CheckCollision(transform))
         {
             transform.position += Vector3.up;
 
@@ -116,7 +124,7 @@ public class Tetromino : MonoBehaviour
         {
             transform.position += Vector3.left;
 
-            if (CheckCollision())
+            if (GridManager.CheckCollision(transform))
             {
                 transform.position += Vector3.right;
             }
@@ -130,7 +138,7 @@ public class Tetromino : MonoBehaviour
         {
             transform.position += Vector3.right;
 
-            if (CheckCollision())
+            if (GridManager.CheckCollision(transform))
             {
                 transform.position += Vector3.left;
             }
@@ -146,7 +154,7 @@ public class Tetromino : MonoBehaviour
 
             transform.Rotate(Vector3.forward, angle);
 
-            if (CheckCollision())
+            if (GridManager.CheckCollision(transform))
             {
                 transform.Rotate(Vector3.forward, -angle);
             }
@@ -177,14 +185,9 @@ public class Tetromino : MonoBehaviour
         }
     }
 
-    bool CheckCollision()
-    {
-        return FindObjectOfType<TetrominoManager>().CheckCollision(this);
-    }
-
     void UpdateGhostBlock()
     {
-        var position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        var position = transform.position;
         bool validPosition = true;
         int step = 1;
 
@@ -194,7 +197,7 @@ public class Tetromino : MonoBehaviour
             {
                 var p = child.transform.position - new Vector3(0, step, 0);
 
-                if (FindObjectOfType<TetrominoManager>().CheckCollision(p))
+                if (GridManager.CheckCollision(p))
                 {
                     validPosition = false;
                     position.y -= step - 1;

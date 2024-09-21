@@ -15,22 +15,12 @@ public class TetrominoManager : MonoBehaviour
         factory.Spawn();
     }
 
-    public bool CheckCollision(Tetromino tetromino)
-    {
-        return grid.CheckCollision(tetromino);
-    }
-
-    public bool CheckCollision(Vector3 p)
-    {
-        return grid.CheckCollision(p);
-    }
-
     // テトリミノの落下位置を記録して新たなテトリミノを生成
     public void Lockdown(Tetromino tetromino)
     {
         Debug.LogWarning($"{tetromino.gameObject.name}がロックダウン");
 
-        if (!grid.TryAdd(tetromino))
+        if (!grid.TryAdd(tetromino.transform))
         {
             Debug.LogWarning("ゲームオーバー");
             return;

@@ -17,9 +17,18 @@ public class GridManager : MonoBehaviour
         grid = new Transform[width, height];
     }
 
-    public bool CheckCollision(Tetromino tetromino)
+    public static Vector3 GridPosition(Vector3 p)
     {
-        foreach (Transform child in tetromino.transform)
+        int x = Mathf.RoundToInt(p.x);
+        int y = Mathf.RoundToInt(p.y);
+        int z = Mathf.RoundToInt(p.z);
+
+        return new Vector3(x, y, z);
+    }
+
+    public bool CheckCollision(Transform transform)
+    {
+        foreach (Transform child in transform)
         {
             if (CheckCollision(child.transform.position))
             {
@@ -30,29 +39,28 @@ public class GridManager : MonoBehaviour
         return false;
     }
 
-    public bool CheckCollision(Vector3 p)
+    public bool CheckCollision(Vector3 position)
     {
-        int x = Mathf.RoundToInt(p.x);
-        int y = Mathf.RoundToInt(p.y);
+        var p = GridPosition(position);
 
-        if (x < 0)
+        if (p.x < 0)
         {
             return true;
         }
 
-        if (x >= width)
+        if (p.x >= width)
         {
             return true;
         }
 
-        if (y < 0)
+        if (p.y < 0)
         {
             return true;
         }
 
-        if (x < width && y < height)
+        if (p.x < width && p.y < height)
         {
-            if (Filled(x, y))
+            if (Filled(p))
             {
                 return true;
             }
@@ -62,9 +70,9 @@ public class GridManager : MonoBehaviour
     }
 
     // テトリミノをグリッドに追加する
-    public bool TryAdd(Tetromino tetromino)
+    public bool TryAdd(Transform transform)
     {
-        foreach (Transform child in tetromino.transform)
+        foreach (Transform child in transform)
         {
             var x = Mathf.RoundToInt(child.transform.position.x);
             var y = Mathf.RoundToInt(child.transform.position.y);
@@ -94,6 +102,11 @@ public class GridManager : MonoBehaviour
 
             ClearLine(y);
         }
+    }
+
+    public bool Filled(Vector3 p)
+    {
+        return Filled((int)p.x, (int)p.y);
     }
 
     public bool Filled(int x, int y)
