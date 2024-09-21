@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class Tetromino : MonoBehaviour
@@ -18,7 +17,7 @@ public class Tetromino : MonoBehaviour
     // ホールドできるかどうか
     private bool canHold = true;
 
-    // 落下間隔（デフォルト）
+    // 落下間隔（レベルごとにデフォルトが変化）
     public float defaultFallTime = 1.0f;
 
     // ソフトドロップの加速倍率
@@ -77,6 +76,7 @@ public class Tetromino : MonoBehaviour
 
     private void Start()
     {
+        defaultFallTime = 1.0f / GridManager.Level;
         fallTime = defaultFallTime;
         previousTime = Time.time;
     }
@@ -88,8 +88,6 @@ public class Tetromino : MonoBehaviour
         {
             return;
         }
-
-        fallTime = FallTimeOfLevel(GridManager.Level);
 
         // 着地したら status が変化する
         Fall();
@@ -112,15 +110,16 @@ public class Tetromino : MonoBehaviour
 
     public void Falling()
     {
+        // ホールドから戻ってきたときはレベルが上る前の可能性があるためここで更新
+        if (status == Status.Holding)
+        {
+            defaultFallTime = 1.0f / GridManager.Level;
+            fallTime = defaultFallTime;
+        }
+
         status = Status.Falling;
         ghostBlockObject = Instantiate(ghostBlock);
         UpdateGhostBlock();
-    }
-
-    float FallTimeOfLevel(int level)
-    {
-        // 早い方を優先する
-        return Math.Min(fallTime, defaultFallTime / level);
     }
 
     private void Fall()
@@ -199,30 +198,30 @@ public class Tetromino : MonoBehaviour
                 PlayRotationSound();
             }
         }
+        // ホールド
+        else if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Hold();
+        }
         // ソフトドロップ
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             Fall();
         }
         // ソフトドロップ（高速）
-        else if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
-            fallTime = FallTimeOfLevel(GridManager.Level) / accelerate;
+            fallTime = defaultFallTime / accelerate;
         }
         // ソフトドロップ（高速）の解除
         else if (Input.GetKeyUp(KeyCode.DownArrow))
         {
-            fallTime = FallTimeOfLevel(GridManager.Level);
+            fallTime = defaultFallTime;
         }
         // ハードドロップ
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             fallTime = hardDropTime;
-        }
-        // ホールド
-        else if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            Hold();
         }
     }
 
