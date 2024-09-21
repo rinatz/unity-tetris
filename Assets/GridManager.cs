@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -165,17 +164,24 @@ public class GridManager : MonoBehaviour
     {
         for (int x = 0; x < width; x++)
         {
+            grid[x, y].transform.localScale = Vector3.one * 1.0f;
+
+            var renderer = grid[x, y].GetComponent<SpriteRenderer>();
+            renderer.color = new Color(1, 1, 1, 1);
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        for (int x = 0; x < width; x++)
+        {
             Debug.Log($"({x}, {y})を削除");
 
             Destroy(grid[x, y].gameObject);
             grid[x, y] = null;
         }
 
-        PlayClearLineSound();
-
-        yield return new WaitForSeconds(0.2f);
-
         FallOneRankAbove(y);
+        PlayClearLineSound();
 
         clearLineCount++;
         UpdateLevel();
