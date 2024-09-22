@@ -9,7 +9,6 @@ public class TetrominoManager : MonoBehaviour
     public AudioClip startSound;
     private GridManager grid;
     private TetrominoFactory factory;
-    private float flushTime;
 
     private void Start()
     {
@@ -17,18 +16,11 @@ public class TetrominoManager : MonoBehaviour
         factory = FindObjectOfType<TetrominoFactory>();
 
         mainText.text = "PLAY";
-        subText.text = "PRESS START";
+        subText.GetComponent<BlinkText>().Blink("PRESS START");
     }
 
     private void Update()
     {
-        flushTime += Time.deltaTime * 5.0f;
-
-        var color = subText.color;
-        color.a = Mathf.Sin(flushTime);
-
-        subText.color = color;
-
         if (!Ready())
         {
             return;
@@ -51,11 +43,13 @@ public class TetrominoManager : MonoBehaviour
     {
         Debug.Log("プレイ開始");
 
-        mainText.text = "";
-        subText.text = "";
         GetComponent<AudioSource>().PlayOneShot(startSound);
+        subText.GetComponent<BlinkText>().BlinkFast();
 
         yield return new WaitForSeconds(1.0f);
+
+        mainText.text = "";
+        subText.text = "";
 
         PlaySound();
         factory.Spawn();
@@ -74,7 +68,7 @@ public class TetrominoManager : MonoBehaviour
         factory.Clear();
 
         mainText.text = "PLAY";
-        subText.text = "PRESS START";
+        subText.GetComponent<BlinkText>().Blink("PRESS START");
     }
 
     void PlaySound()
