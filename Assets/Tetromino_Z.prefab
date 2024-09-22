@@ -53,7 +53,7 @@ MonoBehaviour:
   accelerate: 20
   hardDropTime: 0.0001
   landingTime: 0.5
-  ghostBlock: {fileID: 383656354903273175, guid: 0eb11e28758510e44a734be5e1df648e, type: 3}
+  ghostBlock: {fileID: 9049746912441775099, guid: cbfb25363bc446e45bebf50fbd63e2ec, type: 3}
   moveSound: {fileID: 8300000, guid: 7a4d907e840828d4d93c4ce15d869401, type: 3}
   rotationSound: {fileID: 8300000, guid: 7a4d907e840828d4d93c4ce15d869401, type: 3}
   lockdownSound: {fileID: 8300000, guid: 368a9690497296b4fbd97fe085004208, type: 3}
