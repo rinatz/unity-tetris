@@ -156,12 +156,10 @@ Transform:
   - {fileID: 1378321669}
   - {fileID: 1572995990}
   - {fileID: 3106740087286619324}
-  - {fileID: 1524564393}
-  - {fileID: 925431209}
-  - {fileID: 1639006230}
-  - {fileID: 1949356695}
-  - {fileID: 1031301790}
-  - {fileID: 2053502380}
+  - {fileID: 1740909246}
+  - {fileID: 1995063450}
+  - {fileID: 968959546}
+  - {fileID: 983511593}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &261439842
@@ -286,7 +284,7 @@ GameObject:
   - component: {fileID: 364168205}
   - component: {fileID: 364168206}
   m_Layer: 0
-  m_Name: LevelBody
+  m_Name: LevelValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -301,12 +299,12 @@ Transform:
   m_GameObject: {fileID: 364168204}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.5, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalPosition: {x: 15, y: -7.5, z: 0}
+  m_LocalScale: {x: 10, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1448073963}
-  m_Father: {fileID: 1031301790}
+  m_Father: {fileID: 968959546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &364168206
 SpriteRenderer:
@@ -373,7 +371,7 @@ GameObject:
   - component: {fileID: 406086812}
   - component: {fileID: 406086811}
   m_Layer: 5
-  m_Name: LinesTitle
+  m_Name: LinesTitleCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -597,7 +595,7 @@ GameObject:
   - component: {fileID: 672409603}
   - component: {fileID: 672409602}
   m_Layer: 5
-  m_Name: LevelText
+  m_Name: LevelValueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -750,7 +748,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 464684765}
-  m_Father: {fileID: 261439841}
+  m_Father: {fileID: 1740909246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &925431210
 SpriteRenderer:
@@ -817,7 +815,7 @@ GameObject:
   - component: {fileID: 926441034}
   - component: {fileID: 926441033}
   m_Layer: 5
-  m_Name: LevelTitle
+  m_Name: LevelTitleCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -906,6 +904,39 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 5
   m_TargetDisplay: 0
+--- !u!1 &968959545
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 968959546}
+  m_Layer: 0
+  m_Name: Level
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &968959546
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968959545}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1031301790}
+  - {fileID: 364168205}
+  m_Father: {fileID: 261439841}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &981145861
 GameObject:
   m_ObjectHideFlags: 0
@@ -919,7 +950,7 @@ GameObject:
   - component: {fileID: 981145864}
   - component: {fileID: 981145863}
   m_Layer: 5
-  m_Name: LinesValue
+  m_Name: LinesValueCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1008,6 +1039,39 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 5
   m_TargetDisplay: 0
+--- !u!1 &983511592
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 983511593}
+  m_Layer: 0
+  m_Name: Lines
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &983511593
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983511592}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2053502380}
+  - {fileID: 1356658664}
+  m_Father: {fileID: 261439841}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1031301789
 GameObject:
   m_ObjectHideFlags: 0
@@ -1019,7 +1083,7 @@ GameObject:
   - component: {fileID: 1031301790}
   - component: {fileID: 1031301791}
   m_Layer: 0
-  m_Name: Level
+  m_Name: LevelTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1039,8 +1103,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 926441032}
-  - {fileID: 364168205}
-  m_Father: {fileID: 261439841}
+  m_Father: {fileID: 968959546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1031301791
 SpriteRenderer:
@@ -1106,7 +1169,7 @@ GameObject:
   - component: {fileID: 1046820262}
   - component: {fileID: 1046820261}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: LevelTitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1240,7 +1303,7 @@ GameObject:
   - component: {fileID: 1230730598}
   - component: {fileID: 1230730597}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: HoldTitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1374,7 +1437,7 @@ GameObject:
   - component: {fileID: 1302758889}
   - component: {fileID: 1302758888}
   m_Layer: 5
-  m_Name: LinesText
+  m_Name: LinesValueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1507,7 +1570,7 @@ GameObject:
   - component: {fileID: 1356658664}
   - component: {fileID: 1356658665}
   m_Layer: 0
-  m_Name: LinesBody
+  m_Name: LinesValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1522,12 +1585,12 @@ Transform:
   m_GameObject: {fileID: 1356658663}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.5, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalPosition: {x: 15, y: -11.5, z: 0}
+  m_LocalScale: {x: 10, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 981145862}
-  m_Father: {fileID: 2053502380}
+  m_Father: {fileID: 983511593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1356658665
 SpriteRenderer:
@@ -1678,7 +1741,7 @@ GameObject:
   - component: {fileID: 1448073965}
   - component: {fileID: 1448073964}
   m_Layer: 5
-  m_Name: LevelValue
+  m_Name: LevelValueCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1780,7 +1843,7 @@ GameObject:
   - component: {fileID: 1524564395}
   - component: {fileID: 1524564394}
   m_Layer: 5
-  m_Name: HoldTextArea
+  m_Name: HoldTitleCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1799,7 +1862,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1230730596}
-  m_Father: {fileID: 261439841}
+  m_Father: {fileID: 1740909246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1971,7 +2034,7 @@ GameObject:
   - component: {fileID: 1639006232}
   - component: {fileID: 1639006231}
   m_Layer: 5
-  m_Name: NextTextArea
+  m_Name: NextTitleCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1990,7 +2053,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2038414017}
-  m_Father: {fileID: 261439841}
+  m_Father: {fileID: 1995063450}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2072,7 +2135,7 @@ GameObject:
   - component: {fileID: 1640252661}
   - component: {fileID: 1640252660}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: LineTitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2225,6 +2288,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1949356695}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1740909245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1740909246}
+  m_Layer: 0
+  m_Name: Hold
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1740909246
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1740909245}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1524564393}
+  - {fileID: 925431209}
+  m_Father: {fileID: 261439841}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1949356693
 GameObject:
   m_ObjectHideFlags: 0
@@ -2310,7 +2406,7 @@ Transform:
   - {fileID: 1623517260}
   - {fileID: 1680543795}
   - {fileID: 2095741416}
-  m_Father: {fileID: 261439841}
+  m_Father: {fileID: 1995063450}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1994953330
 GameObject:
@@ -2396,6 +2492,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1995063449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1995063450}
+  m_Layer: 0
+  m_Name: Next
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1995063450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995063449}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1639006230}
+  - {fileID: 1949356695}
+  m_Father: {fileID: 261439841}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2038414016
 GameObject:
   m_ObjectHideFlags: 0
@@ -2408,7 +2537,7 @@ GameObject:
   - component: {fileID: 2038414019}
   - component: {fileID: 2038414018}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NextTitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2541,7 +2670,7 @@ GameObject:
   - component: {fileID: 2053502380}
   - component: {fileID: 2053502381}
   m_Layer: 0
-  m_Name: Lines
+  m_Name: LinesTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2561,8 +2690,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 406086810}
-  - {fileID: 1356658664}
-  m_Father: {fileID: 261439841}
+  m_Father: {fileID: 983511593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2053502381
 SpriteRenderer:
