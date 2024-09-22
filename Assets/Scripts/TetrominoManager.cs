@@ -44,7 +44,7 @@ public class TetrominoManager : MonoBehaviour
         Debug.Log("プレイ開始");
 
         GetComponent<AudioSource>().PlayOneShot(startSound);
-        subText.GetComponent<BlinkText>().BlinkFast();
+        subText.GetComponent<BlinkText>().BlinkFast("PRESS START");
 
         yield return new WaitForSeconds(1.0f);
 

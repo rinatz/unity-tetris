@@ -22,23 +22,17 @@ public class BlinkText : MonoBehaviour
         textMeshProUGUI.color = color;
     }
 
-    public void Blink(string text = "")
+    public void Blink(string text)
     {
-        speed = 5.0f;
+        Debug.Log($"{text}");
 
-        if (text != "")
-        {
-            textMeshProUGUI.text = text;
-        }
+        speed = 5.0f;
+        textMeshProUGUI.text = text;
     }
 
-    public void BlinkFast(string text = "")
+    public void BlinkFast(string text)
     {
         speed = 50.0f;
-
-        if (text != "")
-        {
-            textMeshProUGUI.text = text;
-        }
+        textMeshProUGUI.text = text;
     }
 }
