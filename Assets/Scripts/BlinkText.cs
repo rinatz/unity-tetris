@@ -24,8 +24,6 @@ public class BlinkText : MonoBehaviour
 
     public void Blink(string text)
     {
-        Debug.Log($"{text}");
-
         speed = 5.0f;
         textMeshProUGUI.text = text;
     }

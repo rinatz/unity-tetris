@@ -48,7 +48,8 @@ public class GridManager : MonoBehaviour
                     continue;
                 }
 
-                Destroy(grid[x, y].gameObject);
+                // ピースを構成する親オブジェクト（テトリミノ本体）ごと削除する
+                Destroy(grid[x, y].parent.gameObject);
                 grid[x, y] = null;
             }
         }
@@ -187,9 +188,14 @@ public class GridManager : MonoBehaviour
 
         for (int x = 0; x < width; x++)
         {
-            Debug.Log($"({x}, {y})を削除");
+            Debug.Log($"{grid[x, y].parent.name}から({x}, {y})を削除");
 
             Destroy(grid[x, y].gameObject);
+
+            // FIXME: テトリミノを構成するピースがすべて消えたらテトリミノ本体も削除する
+            // テトリミノを構成するピース数 grid[x, y].parent.childCount は
+            // 次のフレームで更新されることに注意して使用する
+
             grid[x, y] = null;
         }
 
