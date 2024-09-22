@@ -52,11 +52,15 @@ public class Tetromino : MonoBehaviour
 
     // 回転時のウォールキックのオフセット表
     private Vector3[] wallKickOffsets = new Vector3[] {
-        Vector3.zero,   // 回転そのまま
-        Vector3.left,   // 左に1マス
-        Vector3.right,  // 右に1マス
-        Vector3.up,     // 上に1マス
-        Vector3.down,   // 下に1マス
+        Vector3.zero,       // 回転そのまま
+        Vector3.left,       // 左に1マス
+        Vector3.right,      // 右に1マス
+        Vector3.up,         // 上に1マス
+        Vector3.down,       // 下に1マス
+        Vector3.left * 2,   // 左に2マス
+        Vector3.right * 2,  // 右に2マス
+        Vector3.up * 2,     // 上に2マス
+        Vector3.down * 2,   // 下に2マス
     };
 
     private GridManager GridManager
