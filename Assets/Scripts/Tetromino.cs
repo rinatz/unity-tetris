@@ -50,6 +50,15 @@ public class Tetromino : MonoBehaviour
     // ロックダウン時の効果音
     public AudioClip lockdownSound;
 
+    // 回転時のウォールキックのオフセット表
+    private Vector3[] wallKickOffsets = new Vector3[] {
+        Vector3.zero,   // 回転そのまま
+        Vector3.left,   // 左に1マス
+        Vector3.right,  // 右に1マス
+        Vector3.up,     // 上に1マス
+        Vector3.down,   // 下に1マス
+    };
+
     private GridManager GridManager
     {
         get
@@ -89,8 +98,6 @@ public class Tetromino : MonoBehaviour
             return;
         }
 
-        Debug.Log($"{transform.name} - status: {status}");
-
         // 着地したら status が変化する
         Fall();
         HandleInput();
@@ -103,6 +110,8 @@ public class Tetromino : MonoBehaviour
             // 着地して遊びの時間が過ぎたらロックダウン
             if (lockdownTimer.Elapsed)
             {
+                Debug.Log($"{transform.name}がロックダウン");
+
                 status = Status.Lockdown;
                 Lockdown();
             }
@@ -146,6 +155,8 @@ public class Tetromino : MonoBehaviour
 
             if (status == Status.Falling)
             {
+                Debug.Log($"{transform.name}がプレイスメントロックダウン");
+
                 status = Status.Landing;
 
                 // 固定するまで遊びの時間を設ける
@@ -164,14 +175,14 @@ public class Tetromino : MonoBehaviour
         {
             transform.position += Vector3.left;
 
+            // 衝突したら未操作と同じ扱い
             if (GridManager.CheckCollision(transform))
             {
                 transform.position += Vector3.right;
+                return;
             }
-            else
-            {
-                PlayMoveSound();
-            }
+
+            PlayMoveSound();
 
             // 着地中に操作したら落下中に戻す
             if (status == Status.Landing)
@@ -184,14 +195,14 @@ public class Tetromino : MonoBehaviour
         {
             transform.position += Vector3.right;
 
+            // 衝突したら未操作と同じ扱い
             if (GridManager.CheckCollision(transform))
             {
                 transform.position += Vector3.left;
+                return;
             }
-            else
-            {
-                PlayMoveSound();
-            }
+
+            PlayMoveSound();
 
             // 着地中に操作したら落下中に戻す
             if (status == Status.Landing)
@@ -206,14 +217,13 @@ public class Tetromino : MonoBehaviour
 
             transform.Rotate(Vector3.forward, angle);
 
-            if (GridManager.CheckCollision(transform))
+            if (!TryWallKick())
             {
                 transform.Rotate(Vector3.forward, -angle);
+                return;
             }
-            else
-            {
-                PlayRotationSound();
-            }
+
+            PlayRotationSound();
 
             // 着地中に操作したら落下中に戻す
             if (status == Status.Landing)
@@ -246,6 +256,28 @@ public class Tetromino : MonoBehaviour
         {
             fallTimer.interval = hardDropTime;
         }
+    }
+
+    // 壁に衝突しないように位置をずらしながらなるべく回転させる（ウォールキック）
+    private bool TryWallKick()
+    {
+        foreach (var offset in wallKickOffsets)
+        {
+            // ブロックの位置をオフセットさせる
+            transform.position += offset;
+
+            // その位置が有効かどうかを確認する
+            if (!GridManager.CheckCollision(transform))
+            {
+                // 有効なら回転を確定
+                return true;
+            }
+
+            // オフセットが無効だった場合、元の位置に戻す
+            transform.position -= offset;
+        }
+
+        return false;
     }
 
     private void UpdateGhostBlock()

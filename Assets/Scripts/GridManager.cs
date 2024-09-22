@@ -97,7 +97,7 @@ public class GridManager : MonoBehaviour
 
         // y >= height のチェックはしない（テトリミノの生成後はこの条件を満たすため）
 
-        if (p.x < width && p.y < height)
+        if (0 <= p.x && p.x < width && 0 <= p.y && p.y < height)
         {
             if (Filled(p))
             {
