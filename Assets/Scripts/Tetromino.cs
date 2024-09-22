@@ -29,11 +29,8 @@ public class Tetromino : MonoBehaviour
     // 着してから固定されるまでの遊びの時間
     public float landingTime = 0.3f;
 
-    // 落下間隔
-    private float fallTime;
-
-    // 前回落下した時間
-    private float previousTime;
+    // 落下間隔を測るタイマー
+    private Timer fallTimer;
 
     // ゴーストブロック（落下位置を示すブロック）のプレハブ
     public GameObject ghostBlock;
@@ -77,8 +74,7 @@ public class Tetromino : MonoBehaviour
     private void Start()
     {
         defaultFallTime = 1.0f / GridManager.level;
-        fallTime = defaultFallTime;
-        previousTime = Time.time;
+        fallTimer = new Timer(defaultFallTime);
     }
 
     private void Update()
@@ -114,7 +110,7 @@ public class Tetromino : MonoBehaviour
         if (status == Status.Holding)
         {
             defaultFallTime = 1.0f / GridManager.level;
-            fallTime = defaultFallTime;
+            fallTimer = new Timer(defaultFallTime);
         }
 
         status = Status.Falling;
@@ -124,13 +120,12 @@ public class Tetromino : MonoBehaviour
 
     private void Fall()
     {
-        // fallTime 以上経過するまで待機する
-        if (Time.time - previousTime < fallTime)
+        // 落下時間になるまで待機する
+        if (!fallTimer.Elapsed)
         {
             return;
         }
 
-        previousTime = Time.time;
         transform.position += Vector3.down;
 
         // 範囲外に行ったら1マス戻して無効化する（着地）
@@ -144,13 +139,15 @@ public class Tetromino : MonoBehaviour
 
                 // 固定するまで遊びの時間を設ける
                 // FIXME: レベルが上ってもここで落下速度が遅くなってしまう
-                fallTime = landingTime;
             }
             else if (status == Status.Landing)
             {
                 status = Status.Lockdown;
             }
         }
+
+        // タイマーをリセットして次のフレームへ
+        fallTimer.Reset();
     }
 
     private void HandleInput()
@@ -212,17 +209,17 @@ public class Tetromino : MonoBehaviour
         // ソフトドロップ（高速）
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            fallTime = defaultFallTime / accelerate;
+            fallTimer.interval = defaultFallTime / accelerate;
         }
         // ソフトドロップ（高速）の解除
         else if (Input.GetKeyUp(KeyCode.DownArrow))
         {
-            fallTime = defaultFallTime;
+            fallTimer.interval = defaultFallTime;
         }
         // ハードドロップ
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            fallTime = hardDropTime;
+            fallTimer.interval = hardDropTime;
         }
     }
 

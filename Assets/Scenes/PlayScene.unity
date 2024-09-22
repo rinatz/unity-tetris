@@ -3186,6 +3186,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 10
   height: 20
+  level: 1
+  lines: 0
   levelText: {fileID: 672409602}
   linesText: {fileID: 1302758888}
 --- !u!82 &5407040560169431872
