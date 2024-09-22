@@ -7,7 +7,7 @@ public class BlinkText : MonoBehaviour
     private float time;
     private float speed = 5.0f;
 
-    private void Start()
+    private void Awake()
     {
         textMeshProUGUI = gameObject.GetComponent<TextMeshProUGUI>();
     }
