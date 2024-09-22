@@ -32,6 +32,9 @@ public class Tetromino : MonoBehaviour
     // 落下間隔を測るタイマー
     private Timer fallTimer;
 
+    // ロックダウンが発生するまでの時間を測るタイマー
+    private Timer lockdownTimer;
+
     // ゴーストブロック（落下位置を示すブロック）のプレハブ
     public GameObject ghostBlock;
 
@@ -75,6 +78,7 @@ public class Tetromino : MonoBehaviour
     {
         defaultFallTime = 1.0f / GridManager.level;
         fallTimer = new Timer(defaultFallTime);
+        lockdownTimer = new Timer(0.5f);
     }
 
     private void Update()
@@ -85,6 +89,8 @@ public class Tetromino : MonoBehaviour
             return;
         }
 
+        Debug.Log($"{transform.name} - status: {status}");
+
         // 着地したら status が変化する
         Fall();
         HandleInput();
@@ -92,10 +98,14 @@ public class Tetromino : MonoBehaviour
         // ゴーストブロックを更新
         UpdateGhostBlock();
 
-        // 着地したら終了
-        if (status == Status.Lockdown)
+        if (status == Status.Landing)
         {
-            Lockdown();
+            // 着地して遊びの時間が過ぎたらロックダウン
+            if (lockdownTimer.Elapsed)
+            {
+                status = Status.Lockdown;
+                Lockdown();
+            }
         }
     }
 
@@ -114,6 +124,7 @@ public class Tetromino : MonoBehaviour
         }
 
         status = Status.Falling;
+
         ghostBlockObject = Instantiate(ghostBlock);
         UpdateGhostBlock();
     }
@@ -138,11 +149,7 @@ public class Tetromino : MonoBehaviour
                 status = Status.Landing;
 
                 // 固定するまで遊びの時間を設ける
-                // FIXME: レベルが上ってもここで落下速度が遅くなってしまう
-            }
-            else if (status == Status.Landing)
-            {
-                status = Status.Lockdown;
+                lockdownTimer.Reset();
             }
         }
 
@@ -165,6 +172,12 @@ public class Tetromino : MonoBehaviour
             {
                 PlayMoveSound();
             }
+
+            // 着地中に操作したら落下中に戻す
+            if (status == Status.Landing)
+            {
+                status = Status.Falling;
+            }
         }
         // 右移動（右ボタン）
         else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -178,6 +191,12 @@ public class Tetromino : MonoBehaviour
             else
             {
                 PlayMoveSound();
+            }
+
+            // 着地中に操作したら落下中に戻す
+            if (status == Status.Landing)
+            {
+                status = Status.Falling;
             }
         }
         // 回転（上ボタン）
@@ -194,6 +213,12 @@ public class Tetromino : MonoBehaviour
             else
             {
                 PlayRotationSound();
+            }
+
+            // 着地中に操作したら落下中に戻す
+            if (status == Status.Landing)
+            {
+                status = Status.Falling;
             }
         }
         // ホールド
