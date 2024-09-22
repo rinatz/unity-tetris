@@ -76,7 +76,7 @@ public class Tetromino : MonoBehaviour
 
     private void Start()
     {
-        defaultFallTime = 1.0f / GridManager.Level;
+        defaultFallTime = 1.0f / GridManager.level;
         fallTime = defaultFallTime;
         previousTime = Time.time;
     }
@@ -113,7 +113,7 @@ public class Tetromino : MonoBehaviour
         // ホールドから戻ってきたときはレベルが上る前の可能性があるためここで更新
         if (status == Status.Holding)
         {
-            defaultFallTime = 1.0f / GridManager.Level;
+            defaultFallTime = 1.0f / GridManager.level;
             fallTime = defaultFallTime;
         }
 

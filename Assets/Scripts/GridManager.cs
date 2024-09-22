@@ -11,18 +11,17 @@ public class GridManager : MonoBehaviour
     // グリッドの高さ
     public int height = 20;
 
+    // ブロック位置を保存するグリッド
     private Transform[,] grid;
 
-    private int level = 1;
-    private int lines = 0;
+    // レベル（消されたライン数に応じてレベルが上がる）
+    public int level = 1;
+
+    // 消されたライン数
+    public int lines = 0;
 
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI linesText;
-
-    public int Level
-    {
-        get { return level; }
-    }
 
     private void Awake()
     {
